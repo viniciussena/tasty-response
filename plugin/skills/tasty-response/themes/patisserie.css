@@ -1,0 +1,53 @@
+/* tasty-response theme: patisserie
+ *
+ * Patisserie — dark chocolate counter. Raspberry, pistachio, caramel.
+ * The default. Sweet without tipping into candy: the ground is cocoa-plum,
+ * not black, and the accents are the fillings.
+ *
+ * Colors only. Structure lives in styles/core.css. Dark is the default
+ * (D-009); the light block applies when the reader toggles it.
+ */
+
+:root {
+  --bg:            #1A1216;
+  --bg-elevated:   #221820;
+  --surface:       #241A1F;
+  --surface-2:     #2E2128;
+  --fg:            #FBF0EC;
+  --fg-muted:      #C7ADB4;
+  --border:        #38272F;
+  --border-strong: #533A45;
+  --shadow: 0 1px 2px rgba(0,0,0,.5), 0 16px 48px rgba(0,0,0,.35);
+
+  --a1-fg: #FF7D99;  --a1-tint: #34161F;   /* raspberry */
+  --a2-fg: #AEDD92;  --a2-tint: #1E2A18;   /* pistachio */
+  --a3-fg: #F5B26B;  --a3-tint: #331F12;   /* caramel */
+  --a4-fg: #AC9DF5;  --a4-tint: #211C36;   /* blueberry */
+  --a5-fg: #F2DFA0;  --a5-tint: #2E2718;   /* vanilla */
+
+  --accent-fg:   var(--a1-fg);
+  --accent-tint: var(--a1-tint);
+  --grain-opacity: .055;
+}
+
+:root[data-theme="light"] {
+  --bg:            #FDF6F3;
+  --bg-elevated:   #FFFFFF;
+  --surface:       #FFFFFF;
+  --surface-2:     #F6E9E4;
+  --fg:            #241820;
+  --fg-muted:      #6E5560;
+  --border:        #EBD9D2;
+  --border-strong: #D2B3A9;
+  --shadow: 0 1px 2px rgba(40,25,30,.06), 0 16px 40px rgba(40,25,30,.07);
+
+  --a1-fg: #C2185B;  --a1-tint: #FCE7EF;   /* raspberry */
+  --a2-fg: #4A7A2B;  --a2-tint: #EDF5E4;   /* pistachio */
+  --a3-fg: #9C5510;  --a3-tint: #FBEEDD;   /* caramel */
+  --a4-fg: #5B4BC4;  --a4-tint: #EBE9FB;   /* blueberry */
+  --a5-fg: #7E6014;  --a5-tint: #F8F0DA;   /* vanilla */
+
+  --accent-fg:   var(--a1-fg);
+  --accent-tint: var(--a1-tint);
+  --grain-opacity: .03;
+}

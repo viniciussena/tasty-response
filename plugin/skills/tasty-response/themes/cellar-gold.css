@@ -1,0 +1,52 @@
+/* tasty-response theme: cellar-gold
+ *
+ * Cellar & Gold — wine list, tasting menu. Aubergine ground, gold leaf.
+ * The elegance pole: the palette furthest from developer tooling.
+ *
+ * Colors only. Structure lives in styles/core.css. Dark is the default
+ * (D-009); the light block applies when the reader toggles it.
+ */
+
+:root {
+  --bg:            #17101A;
+  --bg-elevated:   #1F1724;
+  --surface:       #211829;
+  --surface-2:     #2B2034;
+  --fg:            #F4EDE4;
+  --fg-muted:      #BCA9B6;
+  --border:        #362A3F;
+  --border-strong: #4E3D59;
+  --shadow: 0 1px 2px rgba(0,0,0,.5), 0 16px 48px rgba(0,0,0,.35);
+
+  --a1-fg: #E8B44A;  --a1-tint: #2E2412;   /* gold */
+  --a2-fg: #E8809E;  --a2-tint: #331823;   /* burgundy */
+  --a3-fg: #C79BE8;  --a3-tint: #291B33;   /* fig */
+  --a4-fg: #A9C99B;  --a4-tint: #1F2A1C;   /* sage */
+  --a5-fg: #E89A6C;  --a5-tint: #33201A;   /* copper */
+
+  --accent-fg:   var(--a1-fg);
+  --accent-tint: var(--a1-tint);
+  --grain-opacity: .05;
+}
+
+:root[data-theme="light"] {
+  --bg:            #FAF5F7;
+  --bg-elevated:   #FFFFFF;
+  --surface:       #FFFFFF;
+  --surface-2:     #F1E8ED;
+  --fg:            #241A28;
+  --fg-muted:      #6A5A6E;
+  --border:        #E6D8E1;
+  --border-strong: #C6B0BF;
+  --shadow: 0 1px 2px rgba(40,25,30,.06), 0 16px 40px rgba(40,25,30,.07);
+
+  --a1-fg: #8A6410;  --a1-tint: #F9EFD8;   /* gold */
+  --a2-fg: #A81E4D;  --a2-tint: #FBE6EC;   /* burgundy */
+  --a3-fg: #6D3E8E;  --a3-tint: #F2E9F8;   /* fig */
+  --a4-fg: #4A6B3C;  --a4-tint: #EBF3E7;   /* sage */
+  --a5-fg: #A85528;  --a5-tint: #FAEBE2;   /* copper */
+
+  --accent-fg:   var(--a1-fg);
+  --accent-tint: var(--a1-tint);
+  --grain-opacity: .028;
+}

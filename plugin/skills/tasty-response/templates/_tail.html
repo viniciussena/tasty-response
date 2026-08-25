@@ -1,0 +1,138 @@
+/* ---------- template chrome (not part of the theme) ---------- */
+.tr-toggle {
+  position: fixed; top: var(--s4); right: var(--s4); z-index: 20;
+  font-family: var(--font-mono); font-size: var(--t-xs);
+  letter-spacing: .08em; text-transform: uppercase;
+  color: var(--fg-muted); background: var(--surface);
+  border: 1px solid var(--border); border-radius: 999px;
+  padding: var(--s2) var(--s4); cursor: pointer;
+}
+.tr-toggle:hover { color: var(--accent-fg); border-color: var(--accent-fg); }
+.tr-skip {
+  position: absolute; left: -9999px;
+  background: var(--surface); color: var(--fg);
+  padding: var(--s3) var(--s4); border-radius: var(--radius-sm); z-index: 30;
+}
+.tr-skip:focus { left: var(--s4); top: var(--s4); position: fixed; }
+</style>
+</head>
+<body>
+
+<a class="tr-skip" href="#tr-answer">Skip to the answer</a>
+
+<button class="tr-toggle" type="button" data-tr-toggle>Dark</button>
+
+<main class="tr-page">
+
+  <!-- The docket. Identifies this tab among six open ones: what project,
+       where it lives, what was asked, why. -->
+  <div class="tr-docket">
+    <div class="tr-docket-id">
+      <span class="tr-docket-project">{{PROJECT_NAME}}</span>
+      <span class="tr-docket-path">{{PROJECT_PATH}}</span>
+    </div>
+    <dl class="tr-docket-fields">
+      <div>
+        <dt>Asked</dt>
+        <dd>{{ASKED}}</dd>
+      </div>
+      <div>
+        <dt>Context</dt>
+        <dd>{{CONTEXT}}</dd>
+      </div>
+      <div>
+        <dt>Attached</dt>
+        <dd><ul class="tr-docket-attachments">{{ATTACHMENTS}}</ul></dd>
+      </div>
+    </dl>
+    <div class="tr-docket-foot">
+      <span>{{TIMESTAMP}}</span>
+      <span>{{READTIME}}</span>
+    </div>
+  </div>
+
+  <header class="tr-head" id="tr-answer">
+    <p class="tr-eyebrow">{{EYEBROW}}</p>
+    <h1>{{HEADLINE}}</h1>
+    <p class="tr-standfirst">{{STANDFIRST}}</p>
+  </header>
+
+  {{SECTIONS}}
+
+  <footer class="tr-foot">
+    <span>{{META}}</span>
+    <span>Navigate with <kbd>J</kbd> / <kbd>K</kbd> or arrow keys</span>
+  </footer>
+
+</main>
+
+<script>
+/* Three behaviors, all optional. The page is complete without any of them
+   and nothing here touches the network. */
+(function () {
+  "use strict";
+  var root = document.documentElement;
+
+  // --- theme: dark by default, light on request ----------------------
+  var btn = document.querySelector("[data-tr-toggle]");
+  function paintToggle() {
+    if (!btn) return;
+    var light = root.getAttribute("data-theme") === "light";
+    btn.textContent = light ? "Light" : "Dark";
+    btn.setAttribute("aria-label", "Switch to " + (light ? "dark" : "light") + " theme");
+  }
+  if (btn) {
+    btn.addEventListener("click", function () {
+      var light = root.getAttribute("data-theme") === "light";
+      if (light) root.removeAttribute("data-theme");
+      else root.setAttribute("data-theme", "light");
+      try { localStorage.setItem("tr-theme", light ? "dark" : "light"); } catch (e) { /* ignore */ }
+      paintToggle();
+    });
+  }
+  paintToggle();
+
+  // --- section reveal ------------------------------------------------
+  var sections = [].slice.call(document.querySelectorAll(".tr-section"));
+  if (!sections.length) return;
+
+  if (root.hasAttribute("data-anim") && "IntersectionObserver" in window) {
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("is-in");
+          io.unobserve(entry.target);
+        }
+      });
+    }, { rootMargin: "0px 0px -12% 0px" });
+    sections.forEach(function (s) { io.observe(s); });
+  } else {
+    // No observer: never leave content hidden behind an effect.
+    root.removeAttribute("data-anim");
+  }
+
+  // --- section navigation --------------------------------------------
+  var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var i = -1;
+  function go(n) {
+    i = Math.max(0, Math.min(sections.length - 1, n));
+    sections[i].scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "start" });
+  }
+  document.addEventListener("keydown", function (e) {
+    if (e.metaKey || e.ctrlKey || e.altKey) return;
+    var el = e.target;
+    if (el && (el.isContentEditable || /^(INPUT|TEXTAREA|SELECT|BUTTON)$/.test(el.tagName))) return;
+    switch (e.key) {
+      case "j": case "ArrowDown": go(i + 1); break;
+      case "k": case "ArrowUp":   go(i - 1); break;
+      case "Home": go(0); break;
+      case "End":  go(sections.length - 1); break;
+      default: return;
+    }
+    e.preventDefault();
+  });
+})();
+</script>
+
+</body>
+</html>

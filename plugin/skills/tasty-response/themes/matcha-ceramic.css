@@ -1,0 +1,52 @@
+/* tasty-response theme: matcha-ceramic
+ *
+ * Matcha & Ceramic — kissaten, unglazed porcelain. Warm sumi ink with
+ * matcha, persimmon, plum. The calm, crafted pole.
+ *
+ * Colors only. Structure lives in styles/core.css. Dark is the default
+ * (D-009); the light block applies when the reader toggles it.
+ */
+
+:root {
+  --bg:            #171814;
+  --bg-elevated:   #1E1F1A;
+  --surface:       #21231D;
+  --surface-2:     #2A2C25;
+  --fg:            #F0EFE6;
+  --fg-muted:      #ABAC9C;
+  --border:        #30322A;
+  --border-strong: #47493D;
+  --shadow: 0 1px 2px rgba(0,0,0,.5), 0 16px 48px rgba(0,0,0,.35);
+
+  --a1-fg: #A6D179;  --a1-tint: #212B18;   /* matcha */
+  --a2-fg: #F58F52;  --a2-tint: #331F14;   /* persimmon */
+  --a3-fg: #EE8AA2;  --a3-tint: #331C22;   /* ume */
+  --a4-fg: #E3C48A;  --a4-tint: #2E2618;   /* kinako */
+  --a5-fg: #8FB6E0;  --a5-tint: #1B2530;   /* indigo */
+
+  --accent-fg:   var(--a1-fg);
+  --accent-tint: var(--a1-tint);
+  --grain-opacity: .05;
+}
+
+:root[data-theme="light"] {
+  --bg:            #F8F7EF;
+  --bg-elevated:   #FFFFFF;
+  --surface:       #FFFFFF;
+  --surface-2:     #EFEEE1;
+  --fg:            #17190F;
+  --fg-muted:      #5D604D;
+  --border:        #E2E0CE;
+  --border-strong: #C0BEA3;
+  --shadow: 0 1px 2px rgba(40,25,30,.06), 0 16px 40px rgba(40,25,30,.07);
+
+  --a1-fg: #4C7A28;  --a1-tint: #EDF5E1;   /* matcha */
+  --a2-fg: #B04E12;  --a2-tint: #FAEBDF;   /* persimmon */
+  --a3-fg: #B23E5C;  --a3-tint: #FBE8ED;   /* ume */
+  --a4-fg: #7A5A14;  --a4-tint: #F7EFD9;   /* kinako */
+  --a5-fg: #2B5C96;  --a5-tint: #E4EDF7;   /* indigo */
+
+  --accent-fg:   var(--a1-fg);
+  --accent-tint: var(--a1-tint);
+  --grain-opacity: .028;
+}

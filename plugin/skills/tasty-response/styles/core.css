@@ -1,0 +1,316 @@
+/* tasty-response — core styles
+ *
+ * Structure, components, and the non-color tokens. Palette lives entirely in
+ * themes/<name>.css, which is what makes a theme swap a one-file change.
+ *
+ * Rule: not one color literal below this comment. Every color comes from a
+ * token the theme defines. If you need a new color, add a token to all four
+ * themes rather than hardcoding it here.
+ */
+
+:root {
+  /* Type: three roles. Display carries the claims, body carries the read,
+     mono carries every label and datum. "TR Display" is the embedded face
+     (fonts/tr-display.css); the fallbacks matter only if that block is
+     stripped. */
+  --font-display: "TR Display", "Fraunces", Georgia, "Iowan Old Style",
+                  "Palatino Linotype", ui-serif, serif;
+  --font: "Atkinson Hyperlegible", "Inter", system-ui, -apple-system,
+          "Segoe UI Variable Text", "Segoe UI", Roboto, "Helvetica Neue",
+          Arial, sans-serif;
+  --font-mono: ui-monospace, "Cascadia Code", "JetBrains Mono", "SF Mono",
+               Menlo, Consolas, "Liberation Mono", monospace;
+
+  --t-xs:   0.8125rem;
+  --t-sm:   0.9375rem;
+  --t-body: 1.0625rem;
+  --t-lead: 1.3125rem;
+  --t-h3:   1.375rem;
+  --t-h2:   1.875rem;
+  --t-h1:   clamp(2.25rem, 1.5rem + 3vw, 3.5rem);
+  --lh-body: 1.65;
+  --lh-tight: 1.08;
+  --measure: 68ch;
+
+  --s1: .25rem; --s2: .5rem;  --s3: .75rem; --s4: 1rem;
+  --s5: 1.5rem; --s6: 2rem;   --s7: 3rem;   --s8: 5rem;
+
+  --radius: 12px;
+  --radius-sm: 6px;
+
+  /* Warmth on a flat dark ground comes from texture, not from more color.
+     One inline SVG; the xmlns is a namespace, not a URL the browser fetches.
+     Each theme sets --grain-opacity to suit its ground. */
+  --grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* ---------- base ---------- */
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: .01ms !important;
+    transition-duration: .01ms !important;
+  }
+}
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font);
+  font-size: var(--t-body);
+  line-height: var(--lh-body);
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+body::before {
+  content: "";
+  position: fixed; inset: 0; z-index: 0; pointer-events: none;
+  background-image: var(--grain);
+  opacity: var(--grain-opacity);
+}
+:focus-visible {
+  outline: 3px solid var(--accent-fg);
+  outline-offset: 3px;
+  border-radius: var(--radius-sm);
+}
+::selection { background: var(--accent-fg); color: var(--bg); }
+
+.tr-page {
+  position: relative; z-index: 1;
+  max-width: calc(var(--measure) + var(--s8) + var(--s7));
+  margin: 0 auto;
+  padding: var(--s6) var(--s5) var(--s8);
+}
+
+/* ---------- the docket: signature element ----------
+   A kitchen order ticket. It answers "which tab is this?" at a glance —
+   project, path, what was asked — which is its entire reason to exist when
+   six of these are open. Mono throughout: instrument panel, not prose. */
+.tr-docket {
+  border: 1px solid var(--border);
+  border-top: 3px solid var(--accent-fg);
+  border-radius: var(--radius);
+  background: var(--surface);
+  box-shadow: var(--shadow);
+  font-family: var(--font-mono);
+  font-size: var(--t-xs);
+  margin-bottom: var(--s7);
+  overflow: hidden;
+}
+.tr-docket-id {
+  display: flex; flex-wrap: wrap; align-items: baseline;
+  gap: var(--s2) var(--s4);
+  padding: var(--s4) var(--s5);
+  background: var(--accent-tint);
+  border-bottom: 1px dashed var(--border-strong);
+}
+.tr-docket-project {
+  font-weight: 700; font-size: var(--t-sm);
+  letter-spacing: .02em; color: var(--accent-fg);
+}
+.tr-docket-path { color: var(--fg-muted); word-break: break-all; font-size: var(--t-xs); }
+.tr-docket-fields { margin: 0; padding: var(--s4) var(--s5); display: grid; gap: var(--s3); }
+.tr-docket-fields > div {
+  display: grid; grid-template-columns: 6.5rem 1fr; gap: var(--s4);
+  align-items: baseline;
+}
+.tr-docket-fields dt {
+  font-size: var(--t-xs); font-weight: 700; letter-spacing: .1em;
+  text-transform: uppercase; color: var(--fg-muted);
+}
+.tr-docket-fields dd {
+  margin: 0; color: var(--fg); font-family: var(--font);
+  font-size: var(--t-sm); line-height: 1.5;
+}
+.tr-docket-attachments { list-style: none; margin: 0; padding: 0; }
+.tr-docket-attachments li {
+  display: inline-block; margin: 0 var(--s2) var(--s1) 0;
+  font-family: var(--font-mono); font-size: var(--t-xs);
+  color: var(--fg-muted);
+  border: 1px solid var(--border-strong); border-radius: var(--radius-sm);
+  padding: .1em .45em;
+}
+.tr-docket-foot {
+  display: flex; flex-wrap: wrap; gap: var(--s2) var(--s5);
+  padding: var(--s3) var(--s5);
+  border-top: 1px dashed var(--border-strong);
+  color: var(--fg-muted); letter-spacing: .04em;
+}
+
+/* ---------- header ---------- */
+.tr-head { padding-bottom: var(--s7); border-bottom: 1px solid var(--border); }
+.tr-eyebrow {
+  font-family: var(--font-mono); font-size: var(--t-xs); font-weight: 700;
+  letter-spacing: .16em; text-transform: uppercase;
+  color: var(--accent-fg); margin: 0 0 var(--s4);
+}
+.tr-head h1 {
+  font-family: var(--font-display); font-weight: 700;
+  font-size: var(--t-h1); line-height: var(--lh-tight);
+  letter-spacing: -.018em; margin: 0 0 var(--s5);
+  max-width: 20ch; text-wrap: balance;
+}
+.tr-standfirst {
+  font-size: var(--t-lead); color: var(--fg-muted);
+  margin: 0; max-width: var(--measure); text-wrap: pretty;
+}
+
+/* ---------- sections: the chunking unit ----------
+   The gap BETWEEN sections is larger than any gap within one. That
+   difference is what makes chunks read as chunks; if it flattens, the page
+   becomes a styled wall. */
+.tr-section { margin-top: var(--s8); scroll-margin-top: var(--s5); }
+.tr-section[data-accent="1"] { --accent-fg: var(--a1-fg); --accent-tint: var(--a1-tint); }
+.tr-section[data-accent="2"] { --accent-fg: var(--a2-fg); --accent-tint: var(--a2-tint); }
+.tr-section[data-accent="3"] { --accent-fg: var(--a3-fg); --accent-tint: var(--a3-tint); }
+.tr-section[data-accent="4"] { --accent-fg: var(--a4-fg); --accent-tint: var(--a4-tint); }
+.tr-section[data-accent="5"] { --accent-fg: var(--a5-fg); --accent-tint: var(--a5-tint); }
+
+.tr-kicker {
+  display: inline-flex; align-items: center; gap: var(--s2);
+  font-family: var(--font-mono); font-size: var(--t-xs); font-weight: 700;
+  letter-spacing: .14em; text-transform: uppercase; color: var(--accent-fg);
+  margin: 0 0 var(--s3);
+}
+.tr-kicker::before {
+  content: ""; width: 1.75rem; height: 2px;
+  background: var(--accent-fg); border-radius: 2px;
+}
+/* Headline = the claim. A headline-only scan must deliver the answer. */
+.tr-section > h2 {
+  font-family: var(--font-display); font-weight: 700;
+  font-size: var(--t-h2); line-height: var(--lh-tight);
+  letter-spacing: -.012em; margin: 0 0 var(--s4);
+  max-width: 24ch; text-wrap: balance;
+}
+.tr-section h3 {
+  font-family: var(--font-display); font-weight: 700;
+  font-size: var(--t-h3); line-height: 1.2;
+  margin: var(--s6) 0 var(--s3);
+}
+p { margin: 0 0 var(--s4); max-width: var(--measure); text-wrap: pretty; }
+.tr-lead { font-size: var(--t-lead); color: var(--fg-muted); }
+strong { font-weight: 700; color: var(--fg); }
+a { color: var(--accent-fg); text-underline-offset: 3px; text-decoration-thickness: 1px; }
+
+ul, ol { margin: 0 0 var(--s4); padding-left: var(--s5); max-width: var(--measure); }
+li { margin-bottom: var(--s2); }
+li::marker { color: var(--accent-fg); font-weight: 700; }
+
+/* ---------- callouts: meaning never carried by color alone ---------- */
+.tr-callout {
+  display: grid; grid-template-columns: auto 1fr; gap: var(--s3);
+  background: var(--accent-tint);
+  border: 1px solid var(--border); border-left: 4px solid var(--accent-fg);
+  border-radius: var(--radius); padding: var(--s4) var(--s5);
+  margin: 0 0 var(--s5);
+}
+.tr-callout-icon { font-size: 1.05em; line-height: var(--lh-body); color: var(--accent-fg); }
+.tr-callout > div > :last-child { margin-bottom: 0; }
+.tr-callout-label {
+  display: block; font-family: var(--font-mono);
+  font-size: var(--t-xs); font-weight: 700; letter-spacing: .1em;
+  text-transform: uppercase; color: var(--accent-fg); margin-bottom: var(--s1);
+}
+.tr-callout[data-kind="key"]  { --accent-fg: var(--a4-fg); --accent-tint: var(--a4-tint); }
+.tr-callout[data-kind="warn"] { --accent-fg: var(--a3-fg); --accent-tint: var(--a3-tint); }
+.tr-callout[data-kind="stop"] { --accent-fg: var(--a1-fg); --accent-tint: var(--a1-tint); }
+.tr-callout[data-kind="ok"]   { --accent-fg: var(--a2-fg); --accent-tint: var(--a2-tint); }
+
+/* ---------- wide content scrolls inside itself, never the page ---------- */
+.tr-scroll {
+  overflow-x: auto; margin: 0 0 var(--s5);
+  border: 1px solid var(--border); border-radius: var(--radius);
+  background: var(--surface);
+}
+table { border-collapse: collapse; width: 100%; font-size: var(--t-sm); }
+caption {
+  text-align: left; color: var(--fg-muted);
+  font-size: var(--t-xs); padding: var(--s3) var(--s4) 0;
+}
+th, td {
+  text-align: left; padding: var(--s3) var(--s4);
+  border-bottom: 1px solid var(--border); vertical-align: top;
+}
+thead th {
+  font-family: var(--font-mono); font-size: var(--t-xs);
+  text-transform: uppercase; letter-spacing: .1em;
+  color: var(--accent-fg); background: var(--accent-tint);
+  border-bottom: 1px solid var(--accent-fg); white-space: nowrap;
+}
+tbody tr:last-child td { border-bottom: none; }
+tbody tr:nth-child(even) { background: var(--surface-2); }
+
+pre {
+  background: var(--bg-elevated); border: 1px solid var(--border);
+  border-left: 3px solid var(--accent-fg);
+  border-radius: var(--radius); padding: var(--s4) var(--s5);
+  overflow-x: auto; margin: 0 0 var(--s5);
+  font-family: var(--font-mono); font-size: var(--t-xs); line-height: 1.6;
+}
+code { font-family: var(--font-mono); font-size: .92em; }
+:not(pre) > code {
+  background: var(--surface-2); border: 1px solid var(--border);
+  border-radius: var(--radius-sm); padding: .1em .35em;
+}
+
+.tr-card {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: var(--s5);
+  margin: 0 0 var(--s5);
+}
+.tr-card > :last-child { margin-bottom: 0; }
+.tr-grid {
+  display: grid; gap: var(--s4);
+  grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+  margin: 0 0 var(--s5);
+}
+.tr-grid > .tr-card { margin: 0; }
+
+figure { margin: 0 0 var(--s5); }
+figcaption {
+  font-family: var(--font-mono); font-size: var(--t-xs);
+  color: var(--fg-muted); margin-top: var(--s2);
+}
+svg { max-width: 100%; height: auto; }
+
+/* ---------- footer ---------- */
+.tr-foot {
+  margin-top: var(--s8); padding-top: var(--s5);
+  border-top: 1px solid var(--border);
+  font-family: var(--font-mono); font-size: var(--t-xs);
+  color: var(--fg-muted);
+  display: flex; flex-wrap: wrap; gap: var(--s2) var(--s5);
+}
+kbd {
+  font-family: var(--font-mono); font-size: .85em;
+  background: var(--surface-2); border: 1px solid var(--border-strong);
+  border-bottom-width: 2px; border-radius: var(--radius-sm); padding: .1em .4em;
+}
+
+/* ---------- motion: one orchestrated reveal, armed from the head script ----
+   [data-anim] is set only when motion is allowed. With JS off or reduced
+   motion on, none of this applies and the page is fully visible. */
+:root[data-anim] .tr-section {
+  transition: opacity .55s cubic-bezier(.22,.61,.36,1),
+              transform .55s cubic-bezier(.22,.61,.36,1);
+}
+:root[data-anim] .tr-section:not(.is-in) { opacity: 0; transform: translateY(14px); }
+:root[data-anim] .tr-docket { animation: tr-rise .5s cubic-bezier(.22,.61,.36,1) both; }
+:root[data-anim] .tr-head h1 { animation: tr-rise .5s cubic-bezier(.22,.61,.36,1) .06s both; }
+:root[data-anim] .tr-standfirst { animation: tr-rise .5s cubic-bezier(.22,.61,.36,1) .12s both; }
+@keyframes tr-rise { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+
+@media (max-width: 40rem) {
+  .tr-page { padding: var(--s4) var(--s4) var(--s7); }
+  .tr-section { margin-top: var(--s7); }
+  .tr-docket-fields > div { grid-template-columns: 1fr; gap: var(--s1); }
+  .tr-head h1, .tr-section > h2 { max-width: none; }
+}
+@media print {
+  body::before, .tr-toggle { display: none; }
+  .tr-section { break-inside: avoid; }
+  .tr-foot { display: none; }
+}

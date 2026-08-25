@@ -1,0 +1,57 @@
+<!doctype html>
+<!--
+  tasty-response artifact template.
+
+  Placeholders the generator replaces:
+
+    {{TITLE}}         browser tab name — a short, specific noun phrase
+    {{PROJECT_NAME}}  what identifies this work at a glance
+    {{PROJECT_PATH}}  local path or URL, whichever locates it
+    {{ASKED}}         the prompt verbatim if short, a faithful summary if long
+    {{CONTEXT}}       one sentence: why this was asked, what was going on
+    {{ATTACHMENTS}}   <li> per attachment, named only — never inlined
+    {{TIMESTAMP}}     when this was generated
+    {{READTIME}}      section count and estimated read, for orientation
+    {{EYEBROW}}       2-4 word category label above the headline
+    {{HEADLINE}}      the answer's single main claim
+    {{STANDFIRST}}    one sentence that delivers the answer to someone who
+                      reads nothing else
+    {{SECTIONS}}      the body — see SKILL.md for the component vocabulary
+    {{META}}          generator provenance line
+
+  Hard constraints: single file, zero external requests, valid standalone
+  document, usable with JavaScript disabled. See docs/design-principles.md.
+
+  This file is ASSEMBLED by build.py from four parts, in order:
+    fonts/tr-display.css   the embedded display face (base64 woff2)
+    styles/core.css        structure and components, no color literals
+    themes/<name>.css      the palette — the only part that varies
+    templates/_head.html + _tail.html   this shell
+
+  To switch themes, replace everything between the TR:THEME markers with the
+  contents of another themes/*.css. To change anything else, edit the source
+  part and re-run build.py — never hand-patch this file.
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark light">
+<meta name="generator" content="tasty-response">
+<title>{{TITLE}}</title>
+<script>
+/* Runs before first paint: applies the saved theme and arms motion, so
+   neither one flashes. Everything here degrades to the dark default. */
+(function () {
+  var r = document.documentElement;
+  try {
+    if (localStorage.getItem("tr-theme") === "light") r.setAttribute("data-theme", "light");
+  } catch (e) { /* blocked storage: keep the default */ }
+  try {
+    if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      r.setAttribute("data-anim", "");
+    }
+  } catch (e) { /* no matchMedia: no animation, no harm */ }
+})();
+</script>
+<style>

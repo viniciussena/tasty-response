@@ -1,0 +1,52 @@
+/* tasty-response theme: charred-citrus
+ *
+ * Charred & Citrus — cast iron, night market. Charcoal with a green
+ * undertone; yolk, lime, blood orange. The bold, high-energy pole.
+ *
+ * Colors only. Structure lives in styles/core.css. Dark is the default
+ * (D-009); the light block applies when the reader toggles it.
+ */
+
+:root {
+  --bg:            #121311;
+  --bg-elevated:   #191B17;
+  --surface:       #1B1D1A;
+  --surface-2:     #242721;
+  --fg:            #F2F4EE;
+  --fg-muted:      #A8B2A0;
+  --border:        #2A2E26;
+  --border-strong: #414738;
+  --shadow: 0 1px 2px rgba(0,0,0,.5), 0 16px 48px rgba(0,0,0,.35);
+
+  --a1-fg: #FFC44D;  --a1-tint: #302614;   /* yolk */
+  --a2-fg: #C2E85A;  --a2-tint: #242E15;   /* lime */
+  --a3-fg: #FF7A55;  --a3-tint: #331C13;   /* blood */
+  --a4-fg: #F0605F;  --a4-tint: #331717;   /* chili */
+  --a5-fg: #B9C4AE;  --a5-tint: #26291F;   /* smoke */
+
+  --accent-fg:   var(--a1-fg);
+  --accent-tint: var(--a1-tint);
+  --grain-opacity: .06;
+}
+
+:root[data-theme="light"] {
+  --bg:            #F6F7F1;
+  --bg-elevated:   #FFFFFF;
+  --surface:       #FFFFFF;
+  --surface-2:     #EAEDE1;
+  --fg:            #14170F;
+  --fg-muted:      #5A6350;
+  --border:        #DDE2D2;
+  --border-strong: #B9C2A9;
+  --shadow: 0 1px 2px rgba(40,25,30,.06), 0 16px 40px rgba(40,25,30,.07);
+
+  --a1-fg: #7A5600;  --a1-tint: #FAF0D6;   /* yolk */
+  --a2-fg: #4F7A0A;  --a2-tint: #EFF6DE;   /* lime */
+  --a3-fg: #C43A15;  --a3-tint: #FCE9E2;   /* blood */
+  --a4-fg: #B32020;  --a4-tint: #FBE6E5;   /* chili */
+  --a5-fg: #4C5641;  --a5-tint: #EAEDE3;   /* smoke */
+
+  --accent-fg:   var(--a1-fg);
+  --accent-tint: var(--a1-tint);
+  --grain-opacity: .03;
+}
