@@ -1,0 +1,6 @@
+# core.autocrlf=true is set system-wide on the primary dev machine. Without
+# this, generated files come back from a fresh clone with CRLF and
+# `build.py --check` reports them stale against LF-written sources.
+* text=auto eol=lf
+*.png binary
+*.woff2 binary

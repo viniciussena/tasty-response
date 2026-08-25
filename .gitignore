@@ -1,0 +1,12 @@
+# tasty-response artifacts (generated output, not source)
+.tasty-response/
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+*.egg-info/
+
+# Scaffold dropped by the agentspec plugin, not part of this project
+.claude/
