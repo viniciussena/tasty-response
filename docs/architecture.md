@@ -162,7 +162,7 @@ Stored per scope, validated by `schemas/config.schema.json`:
 | --- | --- | --- | --- |
 | `enabled` | bool | `true` | Master switch for the response mode |
 | `auto_open` | bool | `true` | Whether the hook opens the browser |
-| `theme` | enum | `"patisserie"` | `patisserie` \| `cellar-gold` \| `charred-citrus` \| `matcha-ceramic` (D-012) |
+| `theme` | enum | `"charred-citrus"` | `charred-citrus` \| `cellar-gold` \| `patisserie` \| `matcha-ceramic` (D-012) |
 | `activation` | enum | `"substantive"` | `substantive` \| `always` \| `on-request` |
 | `keep_terminal_text` | enum | `"summary"` | `summary` \| `full` \| `path-only` |
 | `artifact_dir` | string | scope default | Override the output directory |

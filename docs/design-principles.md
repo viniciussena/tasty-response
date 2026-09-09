@@ -5,6 +5,20 @@ contract** is what actually reduces cognitive load. The **visual system** is
 necessary but not sufficient — a beautiful page full of padded prose fails
 the point of this project.
 
+## 0. The tiebreaker
+
+When two options are both defensible and one is more legible while the other
+is more beautiful, **the more legible one wins**. Least friction is the
+premise; "cool" and "elegant" are not.
+
+This is not a preference, it is the point of the project. An artifact exists
+to cost the reader less than the terminal text did. A choice that makes the
+page more admirable and marginally harder to read has moved in the wrong
+direction, however good it looks in a screenshot.
+
+The rule earned its place by overturning a decision that was already built,
+already paid for, and genuinely more beautiful (D-015).
+
 ## 1. Content contract
 
 Before finalizing any artifact, the following must hold. This is a checklist
@@ -68,12 +82,24 @@ persisted toggle (D-009).
 
 ### Typography
 
-Three roles, and one of them is embedded rather than borrowed from the
-system: **Fraunces SuperSoft Bold**, subset and inlined as base64 (D-013). No
-platform ships a soft serif, and a soft serif is the single most effective
-typographic move available for this brief — so it travels inside the file.
-Body stays a high-legibility sans with `Atkinson Hyperlegible` first, and
-mono handles every label.
+Three roles, and two of them travel inside the file as base64 rather than
+being borrowed from the reader's system.
+
+**Body — `Atkinson Hyperlegible`, embedded (D-014).** This is the role that
+governs reading ergonomics, so it is the one that must not be left to chance.
+It was originally only *named first* in a font stack, which on a normal
+machine fell straight through to whatever the system had. Designed by the
+Braille Institute to differentiate the letterforms readers most often confuse
+— `I l 1`, `O 0`, `b d p q`.
+
+**Display — a build parameter (D-013).** `nunito` (rounded sans) by default,
+`fraunces` (soft serif) kept as the alternative. Headlines are load-bearing
+here, not decorative: the headline scan is a self-check the artifact must
+pass. So the display face is a legibility decision, not only a stylistic one
+— and when the two pulled apart, legibility took it (D-015).
+
+**Mono** handles every label and datum, and is the counterweight that keeps a
+technical artifact from reading as a dessert menu.
 
 ### Tokens
 
@@ -85,12 +111,10 @@ one-file change.
   *meaning* — section identity, callout severity — never decorate at random.
   One accent per section, applied by token cascade so the whole section
   recolors from a single attribute.
-- **Type, three roles**: a display face for claims (heavy, tight tracking), a
-  high-legibility body face with `Atkinson Hyperlegible` first for the
-  dyslexia goal, and a mono utility face for every label, kicker, and datum.
-  The contrast between the display and mono roles *is* the typographic
-  identity — no remote fonts are allowed (D-007), so it has to come from how
-  system stacks are set rather than from a downloaded typeface.
+- **Type**: see Typography above. The contrast between the display and mono
+  roles *is* the typographic identity. Remote fonts remain forbidden (D-007);
+  embedded ones are not remote, which is the distinction that made a real
+  identity affordable (D-013, D-014).
 - **Scale**: one modular scale. Body text no smaller than 16px, line height
   around 1.65, measure capped near 68 characters — long lines are the single
   biggest readability regression on a wide monitor.

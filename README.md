@@ -3,7 +3,8 @@
 > Turns any Claude Code answer into a colorful, single-page HTML you actually want to read.
 
 **Status: M1.** The skill and the visual system exist and are installable by
-hand; the hook that auto-opens the browser and the `tr` installer do not yet.
+hand, and the skill opens the artifact itself (D-016). The `PostToolUse` hook
+that will take that job over, and the `tr` installer, do not exist yet.
 See [docs/implementation-plan.md](docs/implementation-plan.md) for what is
 still missing and what has to be true before it lands.
 
@@ -22,8 +23,9 @@ self-contained HTML file** — sectioned, high contrast, dark by default — and
 **opened automatically in your browser**. The terminal keeps a short summary
 plus the file path, so nothing is lost if you miss the tab.
 
-*(The auto-open half is M2 and not built yet — today the path is printed and
-you open it.)*
+*(Today the skill runs the opener itself as a shell step, so the first one in
+a session may ask for permission. The hook that does it silently is M2 —
+see D-016.)*
 
 ```
 you ask something substantive
@@ -32,7 +34,7 @@ you ask something substantive
 Claude answers  ->  writes .tasty-response/2026-08-25-1432-topic.html
         |                        |
         v                        v
- 2-line terminal          hook opens it in
+ 2-line terminal          it opens in
  summary + path            your browser
                                  |
                                  v
@@ -64,19 +66,24 @@ Good food takes longer than instant noodles. That is not a bug in the recipe.
 ## Themes
 
 Four palettes ship, each a direction rather than a hue shift of the others.
-`patisserie` is the default; the rest are selectable per artifact.
+`charred-citrus` is the default; the rest are selectable per artifact.
 
 | Theme | Reads as |
 | --- | --- |
-| `patisserie` *(default)* | Dark chocolate counter — raspberry, pistachio, caramel |
+| `charred-citrus` *(default)* | Cast iron, night market — yolk, lime, blood orange |
 | `cellar-gold` | Wine list — aubergine ground, gold leaf |
-| `charred-citrus` | Cast iron, night market — yolk, lime, blood orange |
+| `patisserie` | Dark chocolate counter — raspberry, pistachio, caramel |
 | `matcha-ceramic` | Kissaten — matcha, persimmon, plum |
+
+**To see them:** open [examples/index.html](examples/index.html) locally — a
+contact sheet of all four palettes in both modes, linking to the same answer
+rendered in each. Regenerate with `python examples/render.py`. (GitHub will
+not render these; clone and open them.)
 
 Dark is the default in all four; light is one click away and persists. Every
 palette passes WCAG AA in both modes, verified by a script rather than by
-eye, and the display face travels inside the file as base64 — so the page is
-still one self-contained document that opens offline.
+eye, and both the display and body faces travel inside the file as base64 —
+so the page is still one self-contained document that opens offline.
 
 ## Scope control
 

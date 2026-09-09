@@ -19,12 +19,8 @@ import os
 import sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-DEFAULT_THEME = "patisserie"
-
-PARTS = [
-    ("TR:FONT", "fonts/tr-display.css"),
-    ("TR:CORE", "styles/core.css"),
-]
+DEFAULT_THEME = "charred-citrus"
+DEFAULT_DISPLAY = "nunito"
 
 
 def read(rel):
@@ -39,9 +35,22 @@ def themes():
     )
 
 
-def render(theme):
+def displays():
+    return sorted(
+        os.path.basename(p)[len("tr-display-"):-len(".css")]
+        for p in glob.glob(os.path.join(HERE, "fonts", "tr-display-*.css"))
+    )
+
+
+def render(theme, display=None):
+    display = display or DEFAULT_DISPLAY
+    parts = [
+        ("TR:FONT-BODY", "fonts/tr-body.css"),
+        ("TR:FONT-DISPLAY", f"fonts/tr-display-{display}.css"),
+        ("TR:CORE", "styles/core.css"),
+    ]
     chunks = [read("templates/_head.html")]
-    for marker, path in PARTS:
+    for marker, path in parts:
         chunks.append(f"/* ===== {marker} — from {path}, do not edit here ===== */\n")
         chunks.append(read(path))
         chunks.append("\n")
@@ -55,6 +64,7 @@ def render(theme):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--theme", default=DEFAULT_THEME)
+    parser.add_argument("--display", default=DEFAULT_DISPLAY)
     parser.add_argument("--out", default="templates/base.html")
     parser.add_argument("--list", action="store_true")
     parser.add_argument("--check", action="store_true")
@@ -62,15 +72,23 @@ def main():
 
     available = themes()
     if args.list:
+        print("themes:")
         for name in available:
-            print(f"{name}{'  (default)' if name == DEFAULT_THEME else ''}")
+            print(f"  {name}{'  (default)' if name == DEFAULT_THEME else ''}")
+        print("displays:")
+        for name in displays():
+            print(f"  {name}{'  (default)' if name == DEFAULT_DISPLAY else ''}")
         return 0
+
+    if args.display not in displays():
+        print(f"unknown display {args.display!r}; available: {', '.join(displays())}", file=sys.stderr)
+        return 1
 
     if args.theme not in available:
         print(f"unknown theme {args.theme!r}; available: {', '.join(available)}", file=sys.stderr)
         return 1
 
-    html = render(args.theme)
+    html = render(args.theme, args.display)
     out = os.path.join(HERE, args.out)
 
     if args.check:
@@ -84,7 +102,8 @@ def main():
     os.makedirs(os.path.dirname(out), exist_ok=True)
     with open(out, "w", encoding="utf-8", newline="\n") as fh:
         fh.write(html)
-    print(f"wrote {args.out}  ({len(html) / 1024:.0f}KB, theme: {args.theme})")
+    print(f"wrote {args.out}  ({len(html) / 1024:.0f}KB, "
+          f"theme: {args.theme}, display: {args.display})")
     return 0
 
 

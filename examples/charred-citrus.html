@@ -4,20 +4,148 @@
 
   Placeholders the generator replaces:
 
-    {{TITLE}}         browser tab name — a short, specific noun phrase
-    {{PROJECT_NAME}}  what identifies this work at a glance
-    {{PROJECT_PATH}}  local path or URL, whichever locates it
-    {{ASKED}}         the prompt verbatim if short, a faithful summary if long
-    {{CONTEXT}}       one sentence: why this was asked, what was going on
-    {{ATTACHMENTS}}   <li> per attachment, named only — never inlined
-    {{TIMESTAMP}}     when this was generated
-    {{READTIME}}      section count and estimated read, for orientation
-    {{EYEBROW}}       2-4 word category label above the headline
-    {{HEADLINE}}      the answer's single main claim
-    {{STANDFIRST}}    one sentence that delivers the answer to someone who
+    Embedded Display Face         browser tab name — a short, specific noun phrase
+    tasty-response  what identifies this work at a glance
+    C:\tasty-response  local path or URL, whichever locates it
+    Não gostei das cores, consegue pensar em outras paletas? O que em termos de design passaria a ideia de tasty (fontes, cores, etc.)?         the prompt verbatim if short, a faithful summary if long
+    M1 design review — the first palette was rejected and the typography had never been questioned.       one sentence: why this was asked, what was going on
+       <li> per attachment, named only — never inlined
+    25 Aug 2026, 16:40     when this was generated
+    5 sections · ~4 min      section count and estimated read, for orientation
+    Design decision       2-4 word category label above the headline
+    The palette was the wrong place to look first      the answer's single main claim
+    Four themes now ship instead of one, but the change that actually moved the needle was checking which fonts were installed on a real machine — and finding out none of them were.    one sentence that delivers the answer to someone who
                       reads nothing else
-    {{SECTIONS}}      the body — see SKILL.md for the component vocabulary
-    {{META}}          generator provenance line
+    
+  <section class="tr-section" data-accent="1">
+    <p class="tr-kicker">The brief</p>
+    <h2>Appetite responds to warm, saturated color — and to almost nothing blue</h2>
+    <p class="tr-lead">Before choosing hues, it helps to name what the brief
+    actually is, because every theme has to satisfy the same one.</p>
+    <p>Practically no food is naturally blue, and food branding avoids it with
+    something close to fear. Green reads as <em>fresh</em> rather than as the
+    main course. Brown carries roasted, caramelized, umami. That narrows the
+    field before a single swatch is picked.</p>
+    <p>The dark ground is not a developer affectation either — it is the
+    plate. Food photography lives on slate and cast iron because a dark
+    surface makes bright color leap. The one requirement is that the dark has
+    temperature; neutral black kills the effect.</p>
+    <div class="tr-callout" data-kind="key">
+      <span class="tr-callout-icon" aria-hidden="true">◆</span>
+      <div>
+        <span class="tr-callout-label">The hard line</span>
+        <p>Nothing literal. No checked tablecloths, no chef hats, no food
+        emoji. Literalism costs the reader's trust in the content, and the
+        content here is technical.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="tr-section" data-accent="2">
+    <p class="tr-kicker">What ships</p>
+    <h2>Four directions, not four hue shifts of the same idea</h2>
+    <p>Each theme occupies a different pole, so choosing one is a real
+    decision rather than a preference between neighbours.</p>
+    <div class="tr-scroll">
+      <table>
+        <thead>
+          <tr><th>Theme</th><th>Ground</th><th>Accents</th><th>Pole</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><code>charred-citrus</code> <strong>(default)</strong></td><td>Charcoal, green undertone</td>
+              <td>Yolk, lime, blood orange, chili, smoke</td><td>Bold, high energy</td></tr>
+          <tr><td><code>patisserie</code></td><td>Cocoa-plum</td>
+              <td>Raspberry, pistachio, caramel, blueberry, vanilla</td><td>Sweet, high delight</td></tr>
+          <tr><td><code>cellar-gold</code></td><td>Aubergine</td>
+              <td>Gold leaf, burgundy, fig, sage, copper</td><td>Elegant, considered</td></tr>
+          <tr><td><code>matcha-ceramic</code></td><td>Warm sumi ink</td>
+              <td>Matcha, persimmon, plum, kinako, indigo</td><td>Calm, crafted</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>This forced a split worth doing on its own: <code>styles/core.css</code>
+    holds structure and contains zero color literals, and each theme holds
+    nothing but tokens. A theme is now genuinely one file.</p>
+  </section>
+
+  <section class="tr-section" data-accent="3">
+    <p class="tr-kicker">Typography</p>
+    <h2>The accessibility claim was decorative until the font was embedded</h2>
+    <p>The body stack named <code>Atkinson Hyperlegible</code> first, "for the
+    dyslexia goal". Checked against the development machine: not installed.
+    Neither was the second choice. The stack fell straight through to the
+    system sans while the design documents claimed an accessibility
+    property.</p>
+    <p>"No remote fonts" had been read as "system fonts only". But a font
+    embedded as a <code>data:</code> URI is not a remote font — it makes zero
+    network requests and survives offline exactly as well as the rest of the
+    page. Subsetting makes it cheap:</p>
+    <pre>Nunito 800          16.5KB  ->  12.5KB subset
+Baloo 2 700         19.4KB  ->  16.0KB subset
+Fraunces SuperSoft  33.0KB  ->  16.6KB  (opsz pinned to 60)</pre>
+    <p>Nunito ExtraBold carries the display; Atkinson Hyperlegible carries the
+    body at 24KB for both weights. Fraunces was more beautiful and lost
+    anyway — headlines are a reading path here, not decoration, and least
+    friction is the premise.</p>
+    <div class="tr-callout" data-kind="warn">
+      <span class="tr-callout-icon" aria-hidden="true">▲</span>
+      <div>
+        <span class="tr-callout-label">Watch out</span>
+        <p>The families are renamed <code>TR Display</code> and
+        <code>TR Body</code>. Without that, a reader who happens to have the
+        real font installed would silently get their copy instead of the
+        embedded one, and the artifact would render differently on their
+        machine than on yours.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="tr-section" data-accent="4">
+    <p class="tr-kicker">Verification</p>
+    <h2>The contrast audit failed, which is the only reason to trust it</h2>
+    <p>Every accent is checked against the page ground <em>and</em> against
+    its own tint — the tint is what sits behind kickers, table headers,
+    callout labels, and the docket, and it is where contrast quietly
+    breaks.</p>
+    <pre>ok    cellar-gold.css        ok    charred-citrus.css
+ok    matcha-ceramic.css     ok    patisserie.css
+4 themes checked, 0 failures</pre>
+    <p>It did not pass on the first run. Two patisserie light accents came in
+    at 4.42 and 4.44 against the 4.5 minimum — invisible by eye, caught by
+    arithmetic. Both were darkened until they passed.</p>
+    <div class="tr-callout" data-kind="ok">
+      <span class="tr-callout-icon" aria-hidden="true">●</span>
+      <div>
+        <span class="tr-callout-label">Now a rule</span>
+        <p>A theme that does not pass <code>check-contrast.py</code> is not a
+        theme.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="tr-section" data-accent="5">
+    <p class="tr-kicker">Still open</p>
+    <h2>Everything here was verified by script, and none of it by eye</h2>
+    <p>What the tooling can honestly claim, and what it cannot:</p>
+    <ul>
+      <li><strong>Verified:</strong> zero network requests, WCAG AA in eight
+      palettes, the template matching its sources.</li>
+      <li><strong>Not verified:</strong> whether the grain reads as warmth or
+      as noise, and whether the docket earns the space it takes.</li>
+    </ul>
+    <div class="tr-callout" data-kind="stop">
+      <span class="tr-callout-icon" aria-hidden="true">■</span>
+      <div>
+        <span class="tr-callout-label">The gate</span>
+        <p>M1 does not pass because the artifact is prettier. It passes when a
+        specific fact is faster to find here than in the terminal text, and
+        when reading only the headlines still delivers the answer. That is a
+        judgement only a person can make.</p>
+      </div>
+    </div>
+  </section>
+      the body — see SKILL.md for the component vocabulary
+    tasty-response · example artifact          generator provenance line
 
   Hard constraints: single file, zero external requests, valid standalone
   document, usable with JavaScript disabled. See docs/design-principles.md.
@@ -38,7 +166,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="color-scheme" content="dark light">
 <meta name="generator" content="tasty-response">
-<title>{{TITLE}}</title>
+<title>Embedded Display Face</title>
 <script>
 /* Runs before first paint: applies the saved theme and arms motion, so
    neither one flashes. Everything here degrades to the dark default. */
@@ -563,42 +691,163 @@ kbd {
        where it lives, what was asked, why. -->
   <div class="tr-docket">
     <div class="tr-docket-id">
-      <span class="tr-docket-project">{{PROJECT_NAME}}</span>
-      <span class="tr-docket-path">{{PROJECT_PATH}}</span>
+      <span class="tr-docket-project">tasty-response</span>
+      <span class="tr-docket-path">C:\tasty-response</span>
     </div>
     <dl class="tr-docket-fields">
       <div>
         <dt>Asked</dt>
-        <dd>{{ASKED}}</dd>
+        <dd>Não gostei das cores, consegue pensar em outras paletas? O que em termos de design passaria a ideia de tasty (fontes, cores, etc.)?</dd>
       </div>
       <div>
         <dt>Context</dt>
-        <dd>{{CONTEXT}}</dd>
+        <dd>M1 design review — the first palette was rejected and the typography had never been questioned.</dd>
       </div>
-      <!-- tr:attached — delete this entire block when the reader attached
-           nothing. Files you merely read do not belong here. -->
-      <div>
-        <dt>Attached</dt>
-        <dd><ul class="tr-docket-attachments">{{ATTACHMENTS}}</ul></dd>
-      </div>
-      <!-- /tr:attached -->
     </dl>
     <div class="tr-docket-foot">
-      <span>{{TIMESTAMP}}</span>
-      <span>{{READTIME}}</span>
+      <span>25 Aug 2026, 16:40</span>
+      <span>5 sections · ~4 min</span>
     </div>
   </div>
 
   <header class="tr-head" id="tr-answer">
-    <p class="tr-eyebrow">{{EYEBROW}}</p>
-    <h1>{{HEADLINE}}</h1>
-    <p class="tr-standfirst">{{STANDFIRST}}</p>
+    <p class="tr-eyebrow">Design decision</p>
+    <h1>The palette was the wrong place to look first</h1>
+    <p class="tr-standfirst">Four themes now ship instead of one, but the change that actually moved the needle was checking which fonts were installed on a real machine — and finding out none of them were.</p>
   </header>
 
-  {{SECTIONS}}
+  
+  <section class="tr-section" data-accent="1">
+    <p class="tr-kicker">The brief</p>
+    <h2>Appetite responds to warm, saturated color — and to almost nothing blue</h2>
+    <p class="tr-lead">Before choosing hues, it helps to name what the brief
+    actually is, because every theme has to satisfy the same one.</p>
+    <p>Practically no food is naturally blue, and food branding avoids it with
+    something close to fear. Green reads as <em>fresh</em> rather than as the
+    main course. Brown carries roasted, caramelized, umami. That narrows the
+    field before a single swatch is picked.</p>
+    <p>The dark ground is not a developer affectation either — it is the
+    plate. Food photography lives on slate and cast iron because a dark
+    surface makes bright color leap. The one requirement is that the dark has
+    temperature; neutral black kills the effect.</p>
+    <div class="tr-callout" data-kind="key">
+      <span class="tr-callout-icon" aria-hidden="true">◆</span>
+      <div>
+        <span class="tr-callout-label">The hard line</span>
+        <p>Nothing literal. No checked tablecloths, no chef hats, no food
+        emoji. Literalism costs the reader's trust in the content, and the
+        content here is technical.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="tr-section" data-accent="2">
+    <p class="tr-kicker">What ships</p>
+    <h2>Four directions, not four hue shifts of the same idea</h2>
+    <p>Each theme occupies a different pole, so choosing one is a real
+    decision rather than a preference between neighbours.</p>
+    <div class="tr-scroll">
+      <table>
+        <thead>
+          <tr><th>Theme</th><th>Ground</th><th>Accents</th><th>Pole</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><code>charred-citrus</code> <strong>(default)</strong></td><td>Charcoal, green undertone</td>
+              <td>Yolk, lime, blood orange, chili, smoke</td><td>Bold, high energy</td></tr>
+          <tr><td><code>patisserie</code></td><td>Cocoa-plum</td>
+              <td>Raspberry, pistachio, caramel, blueberry, vanilla</td><td>Sweet, high delight</td></tr>
+          <tr><td><code>cellar-gold</code></td><td>Aubergine</td>
+              <td>Gold leaf, burgundy, fig, sage, copper</td><td>Elegant, considered</td></tr>
+          <tr><td><code>matcha-ceramic</code></td><td>Warm sumi ink</td>
+              <td>Matcha, persimmon, plum, kinako, indigo</td><td>Calm, crafted</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>This forced a split worth doing on its own: <code>styles/core.css</code>
+    holds structure and contains zero color literals, and each theme holds
+    nothing but tokens. A theme is now genuinely one file.</p>
+  </section>
+
+  <section class="tr-section" data-accent="3">
+    <p class="tr-kicker">Typography</p>
+    <h2>The accessibility claim was decorative until the font was embedded</h2>
+    <p>The body stack named <code>Atkinson Hyperlegible</code> first, "for the
+    dyslexia goal". Checked against the development machine: not installed.
+    Neither was the second choice. The stack fell straight through to the
+    system sans while the design documents claimed an accessibility
+    property.</p>
+    <p>"No remote fonts" had been read as "system fonts only". But a font
+    embedded as a <code>data:</code> URI is not a remote font — it makes zero
+    network requests and survives offline exactly as well as the rest of the
+    page. Subsetting makes it cheap:</p>
+    <pre>Nunito 800          16.5KB  ->  12.5KB subset
+Baloo 2 700         19.4KB  ->  16.0KB subset
+Fraunces SuperSoft  33.0KB  ->  16.6KB  (opsz pinned to 60)</pre>
+    <p>Nunito ExtraBold carries the display; Atkinson Hyperlegible carries the
+    body at 24KB for both weights. Fraunces was more beautiful and lost
+    anyway — headlines are a reading path here, not decoration, and least
+    friction is the premise.</p>
+    <div class="tr-callout" data-kind="warn">
+      <span class="tr-callout-icon" aria-hidden="true">▲</span>
+      <div>
+        <span class="tr-callout-label">Watch out</span>
+        <p>The families are renamed <code>TR Display</code> and
+        <code>TR Body</code>. Without that, a reader who happens to have the
+        real font installed would silently get their copy instead of the
+        embedded one, and the artifact would render differently on their
+        machine than on yours.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="tr-section" data-accent="4">
+    <p class="tr-kicker">Verification</p>
+    <h2>The contrast audit failed, which is the only reason to trust it</h2>
+    <p>Every accent is checked against the page ground <em>and</em> against
+    its own tint — the tint is what sits behind kickers, table headers,
+    callout labels, and the docket, and it is where contrast quietly
+    breaks.</p>
+    <pre>ok    cellar-gold.css        ok    charred-citrus.css
+ok    matcha-ceramic.css     ok    patisserie.css
+4 themes checked, 0 failures</pre>
+    <p>It did not pass on the first run. Two patisserie light accents came in
+    at 4.42 and 4.44 against the 4.5 minimum — invisible by eye, caught by
+    arithmetic. Both were darkened until they passed.</p>
+    <div class="tr-callout" data-kind="ok">
+      <span class="tr-callout-icon" aria-hidden="true">●</span>
+      <div>
+        <span class="tr-callout-label">Now a rule</span>
+        <p>A theme that does not pass <code>check-contrast.py</code> is not a
+        theme.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="tr-section" data-accent="5">
+    <p class="tr-kicker">Still open</p>
+    <h2>Everything here was verified by script, and none of it by eye</h2>
+    <p>What the tooling can honestly claim, and what it cannot:</p>
+    <ul>
+      <li><strong>Verified:</strong> zero network requests, WCAG AA in eight
+      palettes, the template matching its sources.</li>
+      <li><strong>Not verified:</strong> whether the grain reads as warmth or
+      as noise, and whether the docket earns the space it takes.</li>
+    </ul>
+    <div class="tr-callout" data-kind="stop">
+      <span class="tr-callout-icon" aria-hidden="true">■</span>
+      <div>
+        <span class="tr-callout-label">The gate</span>
+        <p>M1 does not pass because the artifact is prettier. It passes when a
+        specific fact is faster to find here than in the terminal text, and
+        when reading only the headlines still delivers the answer. That is a
+        judgement only a person can make.</p>
+      </div>
+    </div>
+  </section>
+
 
   <footer class="tr-foot">
-    <span>{{META}}</span>
+    <span>tasty-response · example artifact</span>
     <span>Navigate with <kbd>J</kbd> / <kbd>K</kbd> or arrow keys</span>
   </footer>
 

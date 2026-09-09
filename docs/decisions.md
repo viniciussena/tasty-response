@@ -159,8 +159,12 @@ Three rules make it work rather than decorate:
 
 - **The ask is the reader's words**, verbatim when short. A tidied paraphrase
   destroys the recall cue, which is the entire function.
-- **Attachments are named, never inlined.** The docket records what was on
-  the table; the artifact is not an archive.
+- **Attachments are named, never inlined**, and "attachment" means only
+  what the reader put into the prompt. Files the model opened while answering
+  are not attachments, and listing them was the first real bug the docket
+  produced in the field: a reader who attached nothing got six spreadsheets
+  in their header. When nothing was attached, the row is deleted rather than
+  filled with a dash.
 - **Every field is filled.** A half-empty docket is worse than none, because
   it trains the reader to stop looking at it.
 
@@ -199,7 +203,7 @@ from a distinctive downloaded typeface.
 
 ---
 
-## D-012 — Four themes, patisserie by default
+## D-012 — Four themes, charred-citrus by default
 
 **Status:** decided. Supersedes the single espresso palette of D-011.
 
@@ -208,9 +212,9 @@ direction rather than a hue shift of the others:
 
 | Theme | Direction | Pole it occupies |
 | --- | --- | --- |
-| `patisserie` *(default)* | Cocoa-plum ground; raspberry, pistachio, caramel, blueberry, vanilla | Sweet, high delight |
+| `charred-citrus` *(default)* | Charcoal with a green undertone; yolk, lime, blood orange, chili, smoke | Bold, high energy |
 | `cellar-gold` | Aubergine ground; gold leaf, burgundy, fig, sage, copper | Elegant, considered |
-| `charred-citrus` | Charcoal with a green undertone; yolk, lime, blood orange, chili | Bold, high energy |
+| `patisserie` | Cocoa-plum ground; raspberry, pistachio, caramel, blueberry, vanilla | Sweet, high delight |
 | `matcha-ceramic` | Warm sumi ink; matcha, persimmon, plum, kinako, indigo | Calm, crafted |
 
 This forced a structural split that was worth doing on its own:
@@ -224,6 +228,18 @@ Every palette, in both its dark and light form, is verified by
 tint, which is what sits behind kickers, table headers, callout labels, and
 the docket. Two patisserie light accents failed at 4.42 and 4.44 and were
 darkened until they passed. **A theme that does not pass is not a theme.**
+
+The default moved twice before settling — `patisserie`, then `cellar-gold`,
+then `charred-citrus` — each time by looking at rendered artifacts rather than
+at swatch lists. That is the intended way to make this call, and the reason
+`examples/` is generated rather than described.
+
+One note kept on the record: `charred-citrus` contains the lime accent that
+was originally flagged as close to the near-black-plus-acid-green look that
+AI-generated design converges on. It was chosen anyway, on a rendered
+side-by-side rather than on the abstract objection. If the resemblance ever
+becomes the complaint, the fix is to pull lime toward yolk rather than to
+change the default again.
 
 **Reverses if:** readers change themes constantly, which would mean the
 palette is decoration rather than identity.
@@ -248,12 +264,125 @@ punctuation. 16.6KB of woff2, about 22KB as base64, against a ~25KB artifact.
 The family is renamed `TR Display` so an installed copy of Fraunces cannot
 shadow the embedded one and silently change how an artifact renders.
 
-Fraunces is SIL OFL 1.1; the license text ships in `licenses/Fraunces-OFL.txt`
+Fraunces is SIL OFL 1.1; the license text ships in `fonts/licenses/Fraunces-OFL.txt`
 and the attribution is in the CSS comment beside the `@font-face`.
 
-**Why a soft serif:** it is the vernacular of artisanal food branding —
-doughy, hand-cut, warm. Mono stays the utility face, which is what keeps a
-technical artifact from reading as a dessert menu.
+**Note:** this record originally shipped Fraunces SuperSoft Bold on the
+argument that a soft serif is the vernacular of artisanal food branding. The
+mechanism — embed, subset, rename — survived; the face did not. See D-015.
+Mono stays the utility face throughout, which is what keeps a technical
+artifact from reading as a dessert menu.
 
 **Reverses if:** artifact size becomes a real complaint, or a system-stack
 alternative appears that lands the same tone.
+
+---
+
+## D-014 — The body face is embedded too, because the accessibility claim was decorative
+
+**Status:** decided. Extends D-013 from the display face to the body face.
+
+The docs said the body stack put `Atkinson Hyperlegible` first "for the
+dyslexia goal". Checked against the actual development machine: neither
+Atkinson Hyperlegible nor `Inter` is installed. The stack fell straight
+through to Segoe UI. Every artifact generated so far had been rendering in a
+system font while the design documents claimed an accessibility property.
+
+**A font stack that names a face nobody has is a wish, not a decision.** The
+project's stated motivation is readers with ADHD, autism, and dyslexia; the
+body face is the one that governs continuous reading, and it was the one left
+to chance while the display face — used for a dozen words per page — was
+carefully embedded.
+
+Now embedded: Atkinson Hyperlegible 400 and 700, subset to Latin-1, about
+24KB as base64. Designed by the Braille Institute specifically to
+differentiate commonly confused letterforms (`I l 1`, `O 0`, `b d p q`).
+Renamed `TR Body` so a local copy cannot shadow it. SIL OFL 1.1;
+`fonts/licenses/AtkinsonHyperlegible-OFL.txt`.
+
+**The general lesson, worth more than the fix:** a claim in a design document
+is not a property of the artifact. Anything the docs assert about how the
+output behaves has to be verified against a real machine, not against the
+CSS.
+
+---
+
+## D-015 — Nunito is the display face; least friction beats elegance
+
+**Status:** decided. Closes the question D-013 left open, and narrows its
+justification.
+
+Two ergonomics questions were raised about Fraunces SuperSoft Bold: its
+distinctive curved `f`, and whether a serif belongs at all when everything
+else on the page is sans.
+
+**On the `f`:** it is not the `WONK` axis. Rendering the glyph at `WONK=0`
+and `WONK=1` produces an identical outline — 34 contour commands, advance
+871. The shape is inherent to the typeface and cannot be tuned away, so the
+choice was binary: keep Fraunces with its `f`, or change face.
+
+**On serifs:** the general claim that sans is more legible than serif for
+body text does not hold up well for sighted adults; the research finds no
+consistent difference. But this project names its audience in the second
+sentence of its own README, and published dyslexia guidance is explicit in
+recommending sans-serif. When the general evidence is equivocal and the
+audience-specific guidance is not, the guidance wins.
+
+**Decided:** `nunito` (rounded sans, ExtraBold) is the default display face.
+Rounded terminals still carry the confectionery warmth the name asks for,
+without serifs and without high stroke contrast. `fraunces` stays in the
+repository as a selectable alternative — it costs 23KB on disk and nothing at
+all unless chosen.
+
+### The rule this produced
+
+Fraunces was already built, already paid for, already subset and licensed,
+and by the owner's own judgement the better-looking of the two. It lost
+anyway. That is worth stating as a general rule rather than leaving as a
+one-off:
+
+> **Least friction is the premise. "Cool" and "elegant" are not.** When a
+> choice is between the more legible option and the more beautiful one,
+> legibility takes it — including when the beautiful one is already
+> implemented.
+
+An artifact exists to cost the reader less than the terminal text did. A
+choice that makes the page more admirable and marginally harder to read has
+moved in the wrong direction, however well it screenshots. This now sits at
+the top of `docs/design-principles.md`, ahead of the content contract.
+
+**Reverses if:** the rounded sans proves to undercut the identity badly
+enough that readers stop recognizing their artifacts — a recognition problem,
+not an aesthetic one.
+
+---
+
+## D-016 — During M1, the skill opens the artifact itself
+
+**Status:** decided, provisional. Narrows D-002 for M1 only.
+
+D-002 assigns the opening to a `PostToolUse` hook. A hook cannot be
+registered from a skill — it needs `settings.json` or a plugin manifest — so
+under a skill-only install the artifact gets written and never opened. That
+leaves M1 testing the artifact without testing the thing that makes the mode
+feel like a mode.
+
+So for M1 the skill instructs Claude to run the platform's opener as an
+ordinary shell step (SKILL.md §2, "Opening it"). This buys an end-to-end loop
+with no install beyond dropping the skill in place, and it costs three
+things, all accepted for a prototype:
+
+| Cost | Why it is tolerable in M1, and not after |
+| --- | --- |
+| A permission prompt per open, unless the reader allowlists the command | Annoying, but visible and self-inflicted — not a silent failure |
+| The model both chooses the path and opens it, so the prefix and extension check of architecture §5 has no independent enforcer | M1 runs on the author's own machine, against paths the author can see |
+| Instruction-following instead of a deterministic match on `Write` | A missed open costs one click; the plan's risk table cares about the opposite failure |
+
+The second row is the one that must not ship. Path validation is a control
+*on* the model, and a model validating its own chosen path is not a control.
+
+**Reverses when:** M2 lands the hook. At that point the "Opening it" section
+comes *out* of SKILL.md rather than coexisting with it — two openers racing
+on the same `Write` is a duplicate browser tab, which is precisely the
+spurious-tab cost D-006 exists to avoid.
+

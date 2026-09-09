@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark light">
+<title>tasty-response themes</title>
+<style>
+  :root { --page: #16141A; --ink: #EFEAE4; --dim: #9A9199; --edge: #2E2A34; }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--page); color: var(--ink);
+    font: 16px/1.6 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    padding: 3rem 1.5rem 5rem; }
+  .wrap { max-width: 60rem; margin: 0 auto; }
+  h1 { font-size: 1.75rem; letter-spacing: -.02em; margin: 0 0 .5rem; }
+  .sub { color: var(--dim); margin: 0 0 3rem; max-width: 46ch; }
+  .theme { margin-bottom: 3rem; }
+  .theme h2 { font-size: 1.125rem; margin: 0 0 .75rem; font-weight: 600; }
+  .theme h2 a { color: var(--ink); text-underline-offset: 4px; }
+  .tag { color: var(--dim); font-weight: 400; font-size: .875rem; }
+  .modes { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr)); }
+  .mode { background: var(--bg); color: var(--fg); border: 1px solid var(--line);
+    border-radius: 12px; padding: 1rem 1.25rem; }
+  .mode-name { font-size: .75rem; letter-spacing: .12em; text-transform: uppercase;
+    color: var(--muted); margin: 0 0 .75rem; }
+  .chips { list-style: none; margin: 0; padding: 0; display: grid; gap: .5rem; }
+  .chips li { display: grid; grid-template-columns: 1.25rem 1fr auto;
+    align-items: center; gap: .625rem; font-size: .875rem; }
+  .chip { width: 1.25rem; height: 1.25rem; border-radius: 50%;
+    background: var(--c); box-shadow: 0 0 0 4px var(--t); }
+  .chips code { font-size: .75rem; color: var(--muted);
+    font-family: ui-monospace, Consolas, monospace; }
+  footer { color: var(--dim); font-size: .875rem; margin-top: 3rem;
+    border-top: 1px solid var(--edge); padding-top: 1.5rem; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>tasty-response &mdash; themes</h1>
+  <p class="sub">The same answer rendered four times. Only the palette differs.
+  Click a name to open that artifact; each shows all five accent groups, one
+  per section.</p>
+  <section class="theme"><h2><a href="cellar-gold.html">cellar-gold</a><span class="tag"></span></h2><div class="modes"><div class="mode" style="--bg:#17101A;--fg:#F4EDE4;--muted:#BCA9B6;--line:#4E3D59"><p class="mode-name">dark</p><ul class="chips"><li style="--c:#E8B44A;--t:#2E2412"><span class="chip"></span>gold<code>#E8B44A</code></li><li style="--c:#E8809E;--t:#331823"><span class="chip"></span>burgundy<code>#E8809E</code></li><li style="--c:#C79BE8;--t:#291B33"><span class="chip"></span>fig<code>#C79BE8</code></li><li style="--c:#A9C99B;--t:#1F2A1C"><span class="chip"></span>sage<code>#A9C99B</code></li><li style="--c:#E89A6C;--t:#33201A"><span class="chip"></span>copper<code>#E89A6C</code></li></ul></div><div class="mode" style="--bg:#FAF5F7;--fg:#241A28;--muted:#6A5A6E;--line:#C6B0BF"><p class="mode-name">light</p><ul class="chips"><li style="--c:#8A6410;--t:#F9EFD8"><span class="chip"></span>gold<code>#8A6410</code></li><li style="--c:#A81E4D;--t:#FBE6EC"><span class="chip"></span>burgundy<code>#A81E4D</code></li><li style="--c:#6D3E8E;--t:#F2E9F8"><span class="chip"></span>fig<code>#6D3E8E</code></li><li style="--c:#4A6B3C;--t:#EBF3E7"><span class="chip"></span>sage<code>#4A6B3C</code></li><li style="--c:#A85528;--t:#FAEBE2"><span class="chip"></span>copper<code>#A85528</code></li></ul></div></div></section>
+<section class="theme"><h2><a href="charred-citrus.html">charred-citrus</a><span class="tag"> &middot; default</span></h2><div class="modes"><div class="mode" style="--bg:#121311;--fg:#F2F4EE;--muted:#A8B2A0;--line:#414738"><p class="mode-name">dark</p><ul class="chips"><li style="--c:#FFC44D;--t:#302614"><span class="chip"></span>yolk<code>#FFC44D</code></li><li style="--c:#C2E85A;--t:#242E15"><span class="chip"></span>lime<code>#C2E85A</code></li><li style="--c:#FF7A55;--t:#331C13"><span class="chip"></span>blood<code>#FF7A55</code></li><li style="--c:#F0605F;--t:#331717"><span class="chip"></span>chili<code>#F0605F</code></li><li style="--c:#B9C4AE;--t:#26291F"><span class="chip"></span>smoke<code>#B9C4AE</code></li></ul></div><div class="mode" style="--bg:#F6F7F1;--fg:#14170F;--muted:#5A6350;--line:#B9C2A9"><p class="mode-name">light</p><ul class="chips"><li style="--c:#7A5600;--t:#FAF0D6"><span class="chip"></span>yolk<code>#7A5600</code></li><li style="--c:#4F7A0A;--t:#EFF6DE"><span class="chip"></span>lime<code>#4F7A0A</code></li><li style="--c:#C43A15;--t:#FCE9E2"><span class="chip"></span>blood<code>#C43A15</code></li><li style="--c:#B32020;--t:#FBE6E5"><span class="chip"></span>chili<code>#B32020</code></li><li style="--c:#4C5641;--t:#EAEDE3"><span class="chip"></span>smoke<code>#4C5641</code></li></ul></div></div></section>
+<section class="theme"><h2><a href="matcha-ceramic.html">matcha-ceramic</a><span class="tag"></span></h2><div class="modes"><div class="mode" style="--bg:#171814;--fg:#F0EFE6;--muted:#ABAC9C;--line:#47493D"><p class="mode-name">dark</p><ul class="chips"><li style="--c:#A6D179;--t:#212B18"><span class="chip"></span>matcha<code>#A6D179</code></li><li style="--c:#F58F52;--t:#331F14"><span class="chip"></span>persimmon<code>#F58F52</code></li><li style="--c:#EE8AA2;--t:#331C22"><span class="chip"></span>ume<code>#EE8AA2</code></li><li style="--c:#E3C48A;--t:#2E2618"><span class="chip"></span>kinako<code>#E3C48A</code></li><li style="--c:#8FB6E0;--t:#1B2530"><span class="chip"></span>indigo<code>#8FB6E0</code></li></ul></div><div class="mode" style="--bg:#F8F7EF;--fg:#17190F;--muted:#5D604D;--line:#C0BEA3"><p class="mode-name">light</p><ul class="chips"><li style="--c:#4C7A28;--t:#EDF5E1"><span class="chip"></span>matcha<code>#4C7A28</code></li><li style="--c:#B04E12;--t:#FAEBDF"><span class="chip"></span>persimmon<code>#B04E12</code></li><li style="--c:#B23E5C;--t:#FBE8ED"><span class="chip"></span>ume<code>#B23E5C</code></li><li style="--c:#7A5A14;--t:#F7EFD9"><span class="chip"></span>kinako<code>#7A5A14</code></li><li style="--c:#2B5C96;--t:#E4EDF7"><span class="chip"></span>indigo<code>#2B5C96</code></li></ul></div></div></section>
+<section class="theme"><h2><a href="patisserie.html">patisserie</a><span class="tag"></span></h2><div class="modes"><div class="mode" style="--bg:#1A1216;--fg:#FBF0EC;--muted:#C7ADB4;--line:#533A45"><p class="mode-name">dark</p><ul class="chips"><li style="--c:#FF7D99;--t:#34161F"><span class="chip"></span>raspberry<code>#FF7D99</code></li><li style="--c:#AEDD92;--t:#1E2A18"><span class="chip"></span>pistachio<code>#AEDD92</code></li><li style="--c:#F5B26B;--t:#331F12"><span class="chip"></span>caramel<code>#F5B26B</code></li><li style="--c:#AC9DF5;--t:#211C36"><span class="chip"></span>blueberry<code>#AC9DF5</code></li><li style="--c:#F2DFA0;--t:#2E2718"><span class="chip"></span>vanilla<code>#F2DFA0</code></li></ul></div><div class="mode" style="--bg:#FDF6F3;--fg:#241820;--muted:#6E5560;--line:#D2B3A9"><p class="mode-name">light</p><ul class="chips"><li style="--c:#C2185B;--t:#FCE7EF"><span class="chip"></span>raspberry<code>#C2185B</code></li><li style="--c:#4A7A2B;--t:#EDF5E4"><span class="chip"></span>pistachio<code>#4A7A2B</code></li><li style="--c:#9C5510;--t:#FBEEDD"><span class="chip"></span>caramel<code>#9C5510</code></li><li style="--c:#5B4BC4;--t:#EBE9FB"><span class="chip"></span>blueberry<code>#5B4BC4</code></li><li style="--c:#7E6014;--t:#F8F0DA"><span class="chip"></span>vanilla<code>#7E6014</code></li></ul></div></div></section>
+  <section class="theme"><h2>Display face &mdash; same theme, same words</h2>
+  <p class="sub" style="margin:0">
+    <a href="display-fraunces.html">fraunces</a> (soft serif, current default)
+    vs <a href="display-nunito.html">nunito</a> (rounded sans).
+    Body text is Atkinson Hyperlegible in both.</p></section>
+
+  <footer>Generated by examples/render.py from the theme files &mdash; the
+  swatches are parsed, not restated, so they cannot drift.</footer>
+</div>
+</body>
+</html>

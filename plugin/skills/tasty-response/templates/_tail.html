@@ -1,13 +1,40 @@
-/* ---------- template chrome (not part of the theme) ---------- */
-.tr-toggle {
+/* ---------- template chrome (not part of the theme) ----------
+   A switch, not a button: the knob's position states which mode is on
+   without the reader having to interpret a word. Hidden entirely when
+   JavaScript is off, because an inert control is worse than no control. */
+.tr-toggle { display: none; }
+:root[data-js] .tr-toggle {
   position: fixed; top: var(--s4); right: var(--s4); z-index: 20;
-  font-family: var(--font-mono); font-size: var(--t-xs);
-  letter-spacing: .08em; text-transform: uppercase;
-  color: var(--fg-muted); background: var(--surface);
-  border: 1px solid var(--border); border-radius: 999px;
-  padding: var(--s2) var(--s4); cursor: pointer;
+  display: inline-flex; align-items: center;
+  background: none; border: 0; padding: var(--s2); cursor: pointer;
+  border-radius: 999px;
 }
-.tr-toggle:hover { color: var(--accent-fg); border-color: var(--accent-fg); }
+.tr-toggle-track {
+  position: relative; display: block;
+  width: 3.5rem; height: 1.875rem;
+  background: var(--surface); border: 1px solid var(--border-strong);
+  border-radius: 999px;
+  transition: border-color .2s ease;
+}
+.tr-toggle:hover .tr-toggle-track { border-color: var(--accent-fg); }
+.tr-toggle-icon {
+  position: absolute; top: 50%; width: .875rem; height: .875rem;
+  transform: translateY(-50%); color: var(--fg-muted);
+  transition: color .25s ease;
+}
+.tr-toggle-icon-moon { left: .4375rem; }
+.tr-toggle-icon-sun  { right: .4375rem; }
+.tr-toggle-knob {
+  position: absolute; top: 50%; left: .1875rem;
+  width: 1.375rem; height: 1.375rem; border-radius: 50%;
+  background: var(--accent-fg);
+  transform: translateY(-50%);
+  transition: transform .28s cubic-bezier(.22,.61,.36,1);
+}
+/* Dark: knob rests over the moon. Light: it slides to the sun. */
+:root[data-theme="light"] .tr-toggle-knob { transform: translateY(-50%) translateX(1.625rem); }
+:root:not([data-theme="light"]) .tr-toggle-icon-moon { color: var(--bg); }
+:root[data-theme="light"] .tr-toggle-icon-sun { color: var(--bg); }
 .tr-skip {
   position: absolute; left: -9999px;
   background: var(--surface); color: var(--fg);
@@ -20,7 +47,22 @@
 
 <a class="tr-skip" href="#tr-answer">Skip to the answer</a>
 
-<button class="tr-toggle" type="button" data-tr-toggle>Dark</button>
+<button class="tr-toggle" type="button" role="switch" aria-checked="false"
+        aria-label="Light theme" data-tr-toggle>
+  <span class="tr-toggle-track">
+    <span class="tr-toggle-knob"></span>
+    <svg class="tr-toggle-icon tr-toggle-icon-moon" viewBox="0 0 16 16" fill="none"
+         stroke="currentColor" stroke-width="1.6" aria-hidden="true">
+      <path d="M13.5 9.6A6 6 0 0 1 6.4 2.5a6 6 0 1 0 7.1 7.1Z" stroke-linejoin="round"/>
+    </svg>
+    <svg class="tr-toggle-icon tr-toggle-icon-sun" viewBox="0 0 16 16" fill="none"
+         stroke="currentColor" stroke-width="1.6" aria-hidden="true">
+      <circle cx="8" cy="8" r="3.1"/>
+      <path d="M8 .9v1.7M8 13.4v1.7M.9 8h1.7M13.4 8h1.7M3 3l1.2 1.2M11.8 11.8 13 13M13 3l-1.2 1.2M4.2 11.8 3 13"
+            stroke-linecap="round"/>
+    </svg>
+  </span>
+</button>
 
 <main class="tr-page">
 
@@ -40,10 +82,13 @@
         <dt>Context</dt>
         <dd>{{CONTEXT}}</dd>
       </div>
+      <!-- tr:attached — delete this entire block when the reader attached
+           nothing. Files you merely read do not belong here. -->
       <div>
         <dt>Attached</dt>
         <dd><ul class="tr-docket-attachments">{{ATTACHMENTS}}</ul></dd>
       </div>
+      <!-- /tr:attached -->
     </dl>
     <div class="tr-docket-foot">
       <span>{{TIMESTAMP}}</span>
@@ -78,8 +123,8 @@
   function paintToggle() {
     if (!btn) return;
     var light = root.getAttribute("data-theme") === "light";
-    btn.textContent = light ? "Light" : "Dark";
-    btn.setAttribute("aria-label", "Switch to " + (light ? "dark" : "light") + " theme");
+    // role="switch": the knob shows the state, aria-checked reports it.
+    btn.setAttribute("aria-checked", light ? "true" : "false");
   }
   if (btn) {
     btn.addEventListener("click", function () {

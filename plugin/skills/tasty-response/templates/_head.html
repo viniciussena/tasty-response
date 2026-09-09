@@ -44,6 +44,7 @@
    neither one flashes. Everything here degrades to the dark default. */
 (function () {
   var r = document.documentElement;
+  r.setAttribute("data-js", "");   // reveals the theme switch; inert controls stay hidden
   try {
     if (localStorage.getItem("tr-theme") === "light") r.setAttribute("data-theme", "light");
   } catch (e) { /* blocked storage: keep the default */ }

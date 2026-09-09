@@ -11,9 +11,10 @@ a colorful, single-page HTML you actually want to read.*
 
 ## Current state: M1 in progress
 
-**There is no build, no test suite, and no dependency manifest.** Do not
-invent commands for tooling that does not exist, and do not report a `tr` CLI
-as runnable — it is specified, not built.
+**There is no test suite and no dependency manifest.** The only tooling is
+the two scripts below, which need nothing but a stdlib Python. Do not invent
+commands for tooling that does not exist, and do not report a `tr` CLI as
+runnable — it is specified, not built.
 
 What exists:
 
@@ -22,8 +23,10 @@ What exists:
 | `docs/` | Complete. The design is settled; see the table below |
 | `plugin/skills/tasty-response/SKILL.md` | v0 written, **not yet validated** |
 | `.../styles/core.css` | Structure and components. **Zero color literals** — that invariant is what makes a theme one file |
-| `.../themes/*.css` | Four palettes, tokens only. `patisserie` is the default (D-012) |
-| `.../fonts/tr-display.css` | Fraunces SuperSoft Bold, subset, base64. ~22KB (D-013) |
+| `.../themes/*.css` | Four palettes, tokens only. `charred-citrus` is the default (D-012) |
+| `.../fonts/tr-body.css` | Atkinson Hyperlegible 400/700, subset, base64. ~24KB (D-014) |
+| `.../fonts/tr-display-*.css` | Display options, one per file. `nunito` is the default; `fraunces` is kept as the serif alternative (D-015) |
+| `.../fonts/licenses/` | OFL texts, inside the skill so they travel with the fonts wherever it is installed |
 | `.../templates/base.html` | **Generated** by `build.py`. Never hand-patch it — edit the source part and rebuild |
 | `plugin/hooks/`, `src/tr/`, `schemas/` | Not started (M2, M3) |
 
@@ -34,7 +37,13 @@ cd plugin/skills/tasty-response
 python build.py --check        # base.html still matches its sources
 python check-contrast.py       # every theme passes WCAG AA, both modes
 python build.py --theme cellar-gold   # rebuild with a different palette
+cd ../../.. && python examples/render.py   # regenerate the example artifacts
 ```
+
+`examples/` holds one real answer rendered in every theme, plus a contact
+sheet. Both are generated — the swatches are parsed out of the theme files,
+so they cannot drift. Re-run `render.py` after any change to the visual
+system.
 
 The open task is M1 step 3: regenerate 2-3 real dense past answers under the
 skill and judge whether the artifact reads *better*, not merely prettier.
@@ -79,6 +88,13 @@ These are the decisions most likely to be undone by accident:
 - **Style is not the lever.** The content contract — concise, concrete,
   complete, didactic — is what reduces cognitive load. A beautifully themed
   wall of unrestructured prose is the project's main failure mode.
+- **Least friction wins ties.** When a choice is between the more legible
+  option and the more elegant one, legibility takes it — even when the
+  elegant one is better looking and already built (D-015). "Cool" is not a
+  premise this project optimizes for.
+- **A claim in the docs is not a property of the artifact.** Anything the
+  documentation asserts about the output must be verified against a real
+  machine, not against the CSS (D-014).
 
 ## Plugin structure facts
 

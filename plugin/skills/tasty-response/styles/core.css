@@ -10,14 +10,15 @@
 
 :root {
   /* Type: three roles. Display carries the claims, body carries the read,
-     mono carries every label and datum. "TR Display" is the embedded face
-     (fonts/tr-display.css); the fallbacks matter only if that block is
-     stripped. */
-  --font-display: "TR Display", "Fraunces", Georgia, "Iowan Old Style",
-                  "Palatino Linotype", ui-serif, serif;
-  --font: "Atkinson Hyperlegible", "Inter", system-ui, -apple-system,
-          "Segoe UI Variable Text", "Segoe UI", Roboto, "Helvetica Neue",
-          Arial, sans-serif;
+     mono carries every label and datum. "TR Display" and "TR Body" are both
+     embedded (fonts/); the fallbacks matter only if those blocks are
+     stripped. Body legibility is the one that governs reading ergonomics,
+     which is why it is embedded rather than wished for — see D-014. */
+  --font-display: "TR Display", "Nunito", "Fraunces", Georgia,
+                  "Segoe UI Variable Display", system-ui, sans-serif;
+  --font: "TR Body", "Atkinson Hyperlegible", "Inter", system-ui,
+          -apple-system, "Segoe UI Variable Text", "Segoe UI", Roboto,
+          "Helvetica Neue", Arial, sans-serif;
   --font-mono: ui-monospace, "Cascadia Code", "JetBrains Mono", "SF Mono",
                Menlo, Consolas, "Liberation Mono", monospace;
 
