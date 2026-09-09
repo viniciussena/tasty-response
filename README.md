@@ -1,6 +1,6 @@
 # tasty-response
 
-> Turns any Claude Code answer into a colorful, single-page HTML you actually want to read.
+> Turns any Claude Code answer into a colorful, didactic single-page HTML you actually want to read.
 
 **Status: M1.** The skill and the visual system exist and are installable by
 hand, and the skill opens the artifact itself (D-016). The `PostToolUse` hook
