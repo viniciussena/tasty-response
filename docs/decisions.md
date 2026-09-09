@@ -386,3 +386,130 @@ comes *out* of SKILL.md rather than coexisting with it — two openers racing
 on the same `Write` is a duplicate browser tab, which is precisely the
 spurious-tab cost D-006 exists to avoid.
 
+---
+
+## D-017 — Register is part of the content contract: `Direct` joins it
+
+**Status:** decided. Adds a fifth principle to design-principles.md §1.
+
+The generated artifacts read like film-trailer copy. The owner named the
+pattern before it had a name here: *"a house, a car, and nobody imagines what
+it would be."* Three examples from one real artifact:
+
+| Written | The fact it was carrying |
+| --- | --- |
+| "Two new accounts, and a whole report nobody knew existed" | Account 2810 posts to an entity, and no view renders entities |
+| "The part that confuses everyone" | Totals do not sum the detail lines |
+| "A Dynamics report is two lists, and we copy one of them by hand" | The row definition is transcribed manually; there is no API |
+
+The mechanism is **delay**, not verbosity. The rewrites are the same length.
+What changes is where the fact sits: in the original it arrives one beat
+late, so that it lands harder. The owner's report of the cost is the decisive
+evidence — *"it hurts me more than it helps."* A reader who scans only
+headlines leaves without the most important fact in the answer.
+
+**Three causes, and the third was not expected:**
+
+1. **The headline rule had no register constraint.** SKILL.md §7 said
+   "headlines are labels instead of claims — rewrite them as claims", and
+   *claim* invites rhetoric. The punchiest phrasing satisfies the letter of
+   the rule.
+2. **`Concise` plus claim-shaped produces epigram.** Compression pushed
+   toward aphorism, which is the trailer register's native form.
+3. **This repository's own documents were written that way**, and CLAUDE.md
+   instructs them to demonstrate the contract they specify. They were
+   functioning as an unintended style example. Cleaned up in the same change,
+   in the places where a fact was actually being delayed — the sharp
+   *rationale* addressed to the model stays, because it does not withhold
+   anything.
+
+**Decided:** a fifth contract row, **Direct** — the fact sits in the headline
+and in the section's first sentence. Kept separate from `Didactic` rather
+than folded into it, because D-018 gives that row a different test, and one
+row carrying two tests that sometimes pull opposite ways is not checkable.
+
+### The trap this must not fall into
+
+Over-correcting is worse than the original. A headline stripped of its claim
+becomes a label — "Analysis of the new accounts" — which the headline scan
+was written to catch in the first place. The target is a three-way
+distinction, not a two-way one: **a claim, not a label; a claim, not a
+teaser.** One test separates them:
+
+> **Could the reader disagree with it?** "The part that confuses everyone"
+> admits no disagreement, so it is not a claim. "Totals do not sum the detail
+> lines" can be wrong, so it is one.
+
+**Reverses if:** artifacts written flat turn out to be *less* read to the
+end — an engagement problem, not a taste one — or if a reader asks for a
+livelier register by name.
+
+---
+
+## D-018 — When a term is load-bearing, build it from the ground up
+
+**Status:** decided. Rewrites the `Didactic` row alongside D-017.
+
+`Didactic` used to test only coverage: terms defined at first use, each idea
+building on the last. That says nothing about what a definition owes a reader
+who genuinely does not have the concept. Requested directly: use the Feynman
+method for hard concepts, *"no frills, but didactically"*, and detect when it
+is needed rather than waiting to be asked.
+
+**"Use Feynman" alone is not actionable** — on its own it is a licence to
+write more. Reduced to four checkable moves, in order:
+
+| Move | Failure it prevents |
+| --- | --- |
+| Ordinary words first; the term once; then only the term | Two vocabularies running in parallel down the rest of the page |
+| Anchor on a real instance from the reader's own domain | A borrowed analogy: a second thing to learn and then discard |
+| Say what it is *not*, where the confusion is predictable | The right name and the wrong mental model |
+| If it cannot be said without using the term itself, rewrite | "A row definition defines the report's rows" |
+
+The second move is where "no frills" bites. **A concrete instance beats an
+analogy**: row `25A` with `Totaling = 1000..1599` teaches more than any
+comparison and introduces no second domain to discard afterwards. The third
+move usually earns the most — naming the confusion is often worth more than
+the definition correcting it.
+
+### Detection, which is the hard half
+
+Without a trigger the rule fires always and the artifact bloats. The
+criterion is about the reader, not about the term:
+
+> **Explain what the reader would have to go look up. Do not explain what
+> they use every day.**
+
+Evidence that they use it every day is observable: the term appears in their
+prompt, in their repository, or in an earlier turn. Four triggers, any one
+sufficient:
+
+- They asked — "from scratch", "assume I know nothing".
+- **The conclusion depends on it.** They cannot judge whether the answer is
+  right without the term. The strongest of the four.
+- It is a false friend: the term means something here it does not mean in
+  ordinary use. A Dynamics `financial report` holds no numbers.
+- It appears nowhere in what the reader wrote or in their code.
+
+The negative case is a real cost, not a hypothetical one. In the artifact
+that prompted this, the reader plainly owned dbt, seeds and views; defining
+those would have read as condescension and spent the attention budget in the
+wrong place.
+
+### What it collides with
+
+**`Concise` fights it.** "Every sentence carries something the reader does
+not have yet" plus "complete beats concise" did not cover a section that
+exists only to build vocabulary. So the chunking rules gain one: groundwork
+precedes what depends on it and may take its own section — earned when a
+trigger fired, padding when none did. That is the entire line between it and
+slide theater.
+
+**It also pushes against §1 activation.** Explained terms make artifacts
+longer. Accepted: the artifact exists to cost the reader less than the
+terminal did, and an unexplained term costs a search.
+
+**Reverses if:** the triggers prove to fire on terms readers already knew
+often enough that the groundwork sections read as padding. That is a
+detection failure, and the fix would be narrowing the triggers, not dropping
+the method.

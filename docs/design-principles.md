@@ -16,8 +16,8 @@ to cost the reader less than the terminal text did. A choice that makes the
 page more admirable and marginally harder to read has moved in the wrong
 direction, however good it looks in a screenshot.
 
-The rule earned its place by overturning a decision that was already built,
-already paid for, and genuinely more beautiful (D-015).
+The rule comes from D-015, where it overturned a decision that was already
+built, already paid for, and better looking than what replaced it.
 
 ## 1. Content contract
 
@@ -30,11 +30,50 @@ answer stays free-form per topic; only the quality bar is fixed.
 | **Concise** | Every sentence carries information the reader does not already have | Restating the question; "as mentioned above"; throat-clearing preambles |
 | **Concrete** | Claims are anchored to names, numbers, paths, or examples | "Improves performance"; "several options"; "best practices" |
 | **Complete** | Necessary nuance survives the compression | A caveat dropped because it did not fit the slide |
-| **Didactic** | Terms are defined at first use; each idea builds on the last | Jargon assumed; the payoff buried three sections down |
+| **Direct** | The fact sits in the headline and in the section's first sentence | The fact held one beat back for effect |
+| **Didactic** | Every term the conclusion depends on is built before it is used | Jargon assumed; the payoff buried three sections down |
 
 **Complete beats concise when they collide.** The goal is density reduction,
 not information loss. If a nuance matters, give it its own section rather
 than cutting it.
+
+**Direct and didactic pull opposite ways, and that is expected.** Directness
+removes words; building a hard term adds them. They are not in conflict
+because they govern different things — directness is about where the fact
+sits in a sentence, didacticism about whether the reader has ground to stand
+on. Groundwork written directly satisfies both. The operational form of both
+rules lives in SKILL.md §4 (D-017, D-018).
+
+### Register
+
+The delayed fact is a failure mode of its own (D-017). A headline built on
+the surprise rather than on the finding, a heading that names the effect on
+the reader instead of the content, a list of three with a turn at the end:
+each moves real information one beat later so that it lands harder. The beat
+costs the reader time, and costs anyone scanning only headlines the fact
+itself.
+
+The overcorrection is worse. A headline stripped of its claim becomes a
+label, and the headline scan exists to catch that. The target is between the
+two, and one test separates them: **could the reader disagree with it?** A
+teaser admits no disagreement. A claim can be wrong.
+
+### Explaining a hard term
+
+When an answer rests on a concept the reader does not have, the concept gets
+built before it is used — plainly, and without ornament (D-018).
+
+The judgement is about who the reader is, not about how hard the term is:
+**explain what they would have to go look up, not what they use every day.**
+Evidence that they use it every day is observable — the term appears in their
+prompt, in their repository, or in an earlier turn. Explaining those back to
+them spends attention in the wrong place.
+
+A concrete instance from the reader's own domain beats an analogy borrowed
+from another one. The analogy is a second thing to learn and then discard,
+and metaphor is exactly the ornament this rule excludes. Where a confusion is
+predictable, saying what the thing is *not* is usually worth more than the
+definition that corrects it.
 
 ### Chunking
 
@@ -46,6 +85,10 @@ than cutting it.
 - Prefer a table when comparing 3+ things across 2+ dimensions. Prefer a list
   when order or completeness matters. Prefer prose when the reasoning
   connecting the points *is* the content.
+- Groundwork goes before whatever depends on it, and may need a section of
+  its own. Such a section is earned when the reader genuinely lacks the term
+  and padding when they do not — that is the whole line between it and slide
+  theater.
 - A diagram earns its place by showing a mechanism words handle badly —
   flow, topology, timing. A diagram that restates a list is decoration.
 
@@ -176,6 +219,12 @@ Things that would technically satisfy the letter of the spec and defeat it:
   main failure mode of this project.
 - **Slide theater.** Chunking padded content across twelve near-empty
   sections to look structured. Sections must be earned by ideas.
+- **Trailer voice.** The fact held one beat back so that its arrival lands.
+  Same information, moved so that it reaches the reader late.
+- **The analogy detour.** A metaphor from another domain where a real
+  instance from this one was available.
+- **Explaining what they already know.** Defining a term the reader used in
+  their own prompt.
 - **Lossy compression.** Cutting the caveat that made the answer correct
   because it did not fit the layout.
 - **Decorative diagrams.** A flowchart of three boxes that a sentence covered

@@ -29,7 +29,8 @@ Skip when **any** of these hold:
 
 **When uncertain, skip.** A missing artifact costs one scroll. A spurious one
 costs a browser tab, and a mode that opens tabs for "yes, that's correct"
-teaches the reader to ignore it — which is fatal for an always-on tool.
+teaches the reader to ignore it. An always-on mode that gets ignored has
+already failed.
 
 ### Opting out
 
@@ -86,8 +87,8 @@ file exists and its path is in the terminal — that is the floor, and it is
 enough.
 
 Never let the opener consume the answer. Do not diagnose it, do not try a
-second command, do not ask the reader to install anything. A turn that ends
-in `xdg-open` debugging has cost more than the artifact saved.
+second command, do not ask the reader to install anything. Debugging the
+opener costs more than the artifact is worth.
 
 ### Choosing a theme
 
@@ -182,11 +183,84 @@ schema: the answer's *shape* stays free-form per topic.
 | **Concise** | Every sentence carries something the reader does not have yet | Restating the question; "as mentioned above"; preambles |
 | **Concrete** | Claims anchor to names, numbers, paths, examples | "Improves performance"; "several options"; "best practices" |
 | **Complete** | Necessary nuance survives compression | A caveat dropped because it did not fit the layout |
-| **Didactic** | Terms defined at first use; each idea builds on the last | Jargon assumed; the payoff buried in section four |
+| **Direct** | The fact sits in the headline and in the section's first sentence | The fact held one beat back for effect |
+| **Didactic** | Every term the conclusion depends on is built before it is used | Jargon assumed; the payoff buried in section four |
 
 **Complete beats concise when they collide.** The goal is density reduction,
 not information loss. A nuance that matters gets its own section rather than
 being cut.
+
+**Direct and didactic pull opposite ways, and that is expected.** Directness
+removes words; building a hard term adds them. They govern different things —
+directness is about where the fact sits in a sentence, didacticism about
+whether the reader has ground to stand on. Groundwork written directly
+satisfies both.
+
+### Saying it straight
+
+Register is part of the contract, not a matter of taste. The failure has one
+shape: the fact arrives a beat late so that it lands harder. That beat costs
+the reader time, and costs anyone scanning the headlines the fact itself.
+
+| Instead of | Write |
+| --- | --- |
+| Two new accounts, and a whole report nobody knew existed | Account 2810 posts to an entity, and no view renders entities |
+| The part that confuses everyone | Totals do not sum the detail lines — each resolves its own range |
+
+Both rewrites are the same length. The only thing that moved is the fact.
+
+Three habits produce the late version:
+
+- **A headline built on the surprise** instead of on the finding. What is new
+  to you is not the claim. The claim is what is true.
+- **A heading that names the effect on the reader** — "the part that confuses
+  everyone", "where it gets interesting". That is a promise of content
+  standing in the place where content belongs.
+- **The list of three with a turn at the end.** Two plain items, then the
+  twist, joined by a comma. Real information used as a punchline is still
+  being used as a punchline.
+
+**Do not overcorrect: the opposite failure is worse.** A headline stripped of
+its claim becomes a label — "Analysis of the new accounts" — and the headline
+scan in §7 exists to catch exactly that. The target is between the two: a
+claim, not a label; a claim, not a teaser. The test that separates them is
+**whether the reader could disagree with it.** "The part that confuses
+everyone" admits no disagreement, so it is not a claim. "Totals do not sum
+the detail lines" can be wrong, so it is one.
+
+### Explaining a hard term
+
+Some answers rest on a concept the reader does not have. Build it before
+using it, plainly and without ornament.
+
+**When this applies.** Explain what the reader would have to go look up. Do
+not explain what they use every day — the evidence that they use it every day
+is that the term appears in their prompt, in their repository, or in an
+earlier turn. Four triggers:
+
+- They asked for it: "from scratch", "assume I know nothing".
+- **The conclusion depends on it.** They cannot judge whether the answer is
+  right without knowing the term. This is the strongest trigger.
+- It is a false friend — the term means something here that it does not mean
+  in ordinary use. A Dynamics `financial report` holds no numbers, so a
+  reader who assumes the obvious sense gets it wrong.
+- It appears nowhere in what the reader wrote or in their code.
+
+**How to build it.** Four moves, in order:
+
+| Move | Failure it prevents |
+| --- | --- |
+| Say it in ordinary words first, give the term once, then use only the term | Two vocabularies running in parallel down the rest of the page |
+| Anchor on a real instance from the reader's own domain | A borrowed analogy: a second thing to learn and then discard |
+| Say what it is *not*, wherever the confusion is predictable | The reader leaves with the right name and the wrong model |
+| If it cannot be said without using the term itself, rewrite it | "A row definition defines the report's rows" |
+
+**A concrete instance beats an analogy.** Showing row `25A` with `Totaling =
+1000..1599` teaches more than any comparison and introduces no second domain.
+Metaphor is the ornament this whole section exists to avoid.
+
+The third move usually earns the most. Naming the confusion is often worth
+more than the definition that corrects it.
 
 ### Chunking
 
@@ -201,6 +275,10 @@ being cut.
   the content.
 - A diagram earns its place by showing a mechanism words handle badly — flow,
   topology, timing. A diagram that restates a list is decoration; cut it.
+- **Groundwork goes before whatever depends on it, and may need its own
+  section.** A section that only builds vocabulary is earned when one of the
+  triggers above fired, and is padding when none did. That is the whole line
+  between it and slide theater.
 - **Do not number sections** unless the content genuinely is a sequence — a
   real process, a timeline, ranked steps. Numbering non-sequential sections
   invents an order the reader will try to follow.
@@ -214,8 +292,9 @@ each chunk gets a visual identity for free.
 ```html
 <section class="tr-section" data-accent="1">
   <p class="tr-kicker">Category</p>
-  <h2>The claim this section makes</h2>
-  <p class="tr-lead">The one sentence a scanner needs.</p>
+  <h2>Totals do not sum the detail lines</h2>
+  <p class="tr-lead">Every row resolves its own account range against the
+    ledger, totals included.</p>
   <p>Supporting detail.</p>
 </section>
 ```
@@ -257,7 +336,7 @@ external images are not.
 | Zero network requests — CSS and JS inlined, no CDN, no remote fonts | It must open offline, years from now |
 | Images as `data:` URIs or omitted | Same reason |
 | Dark is the default; light is opt-in via the toggle | Developers already read on dark, and the toggle persists per reader |
-| Display and body faces are embedded as base64, not linked | Neither is installed on a normal machine, so a font stack that merely names them is a wish |
+| Display and body faces are embedded as base64, not linked | Neither is installed on a normal machine, where naming them in a font stack does nothing |
 | Every color comes from a token; none is hardcoded in an element rule | A new theme stays a one-file change |
 | Semantic HTML — real headings in order, real lists, real tables | The visual hierarchy and the document outline must agree |
 | Fully usable with JavaScript disabled | Motion and the toggle are enhancements, never load-bearing |
@@ -266,10 +345,12 @@ external images are not.
 
 ## 7. Self-check before finalizing
 
-Run these five. Any failure means revise the artifact, not ship it:
+Run these six. Any failure means revise the artifact, not ship it:
 
-1. **Headline scan.** Read only the `<h2>`s. Do they deliver the answer? If
-   not, the headlines are labels instead of claims — rewrite them as claims.
+1. **Headline scan.** Read only the `<h2>`s. Do they deliver the answer? Then
+   test each one for register: a headline nobody could disagree with is a
+   label or a teaser, not a claim. "Where it gets interesting" fails; "Totals
+   do not sum the detail lines" passes.
 2. **Lookup test.** Pick a specific fact in the answer. Could the reader find
    it faster here than in the terminal text? If not, the chunking is
    decorative.
@@ -281,7 +362,12 @@ Run these five. Any failure means revise the artifact, not ship it:
    read?
 4. **Loss check.** Did any caveat, constraint, or number get dropped to fit
    the layout? Put it back.
-5. **Offline check.** No `<link>`, no `<script src>`, no remote font, no
+5. **Term check.** Every term the conclusion depends on is either in the
+   reader's own words somewhere, or built in the artifact before its first
+   use. Both directions count: an undefined term costs them a search, and a
+   term explained back to them that they used in their own prompt costs them
+   trust.
+6. **Offline check.** No `<link>`, no `<script src>`, no remote font, no
    `url(https://...)` fetching an asset. Two URLs are expected and correct:
    the `xmlns="http://www.w3.org/2000/svg"` namespace on an inline SVG, and
    any font attribution inside a CSS comment. Neither is a request.
@@ -293,6 +379,16 @@ Run these five. Any failure means revise the artifact, not ship it:
   the entire point.
 - **Slide theater.** Spreading padded content across twelve near-empty
   sections to look structured. Sections are earned by ideas.
+- **Trailer voice.** The fact held one beat back so its arrival lands — a
+  headline built on the surprise, a heading naming the effect on the reader,
+  a list of three with a turn at the end. Same information, moved so that it
+  arrives late.
+- **The analogy detour.** Explaining with a metaphor from another domain when
+  a real instance from this one was available. The reader now has two things
+  to learn and one of them is disposable.
+- **Explaining what they already know.** Defining a term the reader used in
+  their own prompt. It spends the attention budget in the wrong place and
+  reads as condescension.
 - **Lossy compression.** Cutting the caveat that made the answer correct.
 - **Decorative diagrams.** Three boxes and two arrows restating a sentence.
 - **Docket theater.** Filling `{{ASKED}}` with a tidied-up version of the
