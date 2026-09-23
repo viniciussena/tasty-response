@@ -19,7 +19,9 @@ import re
 import sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-SKILL = os.path.join(os.path.dirname(HERE), "plugin", "skills", "tasty-response")
+SKILL = os.path.join(
+    os.path.dirname(HERE), "plugins", "tasty-response", "skills", "tasty-response"
+)
 sys.path.insert(0, SKILL)
 
 import build  # noqa: E402  (path has to be set first)

@@ -9,9 +9,9 @@ TR ships as a **Claude Code plugin** with four parts:
 
 | Component | Path in repo | Responsibility |
 | --- | --- | --- |
-| Skill | `plugin/skills/tasty-response/SKILL.md` | Instructs Claude *what* to generate: visual system, didactic contract, HTML rules |
-| Hook config | `plugin/hooks/hooks.json` | Registers the events TR listens to |
-| Hook script | `plugin/scripts/open-artifact.*` | Side effect: open the generated file in a browser, per OS |
+| Skill | `plugins/tasty-response/skills/tasty-response/SKILL.md` | Instructs Claude *what* to generate: visual system, didactic contract, HTML rules |
+| Hook config | `plugins/tasty-response/hooks/hooks.json` | Registers the events TR listens to |
+| Hook script | `plugins/tasty-response/scripts/open-artifact.*` | Side effect: open the generated file in a browser, per OS |
 | Installer CLI | `src/tr/` | `setup` / `uninstall` / `config` / `doctor`, scoped project or user |
 
 ### Corrections to the original plan
@@ -22,6 +22,12 @@ verified form:
 
 - The manifest is `.claude-plugin/plugin.json`, **not** a root-level
   `plugin.json`.
+- **Components live at the plugin root, and there is no `plugin/` directory
+  convention.** `skills/`, `hooks/`, `scripts/` sit directly inside the
+  plugin, and the plugin itself is one directory under `plugins/` with a
+  repo-root marketplace catalog pointing at it (D-019). An earlier draft of
+  this document specified `plugin/skills/...`, which Claude Code does not
+  recognize.
 - Hook configuration is `hooks/hooks.json` (a `{"hooks": {...}}` object keyed
   by event name), and hook commands reference their own files through the
   `${CLAUDE_PLUGIN_ROOT}` variable.
@@ -33,25 +39,29 @@ verified form:
 ```
 tasty-response/
   .claude-plugin/
-    plugin.json          # manifest: name, version, description, author, keywords
-    marketplace.json     # only if TR is published through its own marketplace
-  plugin/
-    skills/tasty-response/
-      SKILL.md           # the response-mode contract
-      build.py           # assembles templates/base.html from the parts below
-      check-contrast.py  # WCAG gate every theme must pass
-      styles/core.css    # structure; zero color literals
-      themes/*.css       # four palettes, tokens only
-      fonts/tr-display.css
-      templates/base.html   # GENERATED — never hand-patch
-      templates/_head.html templates/_tail.html
-    hooks/hooks.json
-    scripts/open-artifact.sh
-    scripts/open-artifact.ps1
+    marketplace.json     # catalog: one entry, pointing at ./plugins/tasty-response
+  plugins/
+    tasty-response/            # ← the plugin root; ${CLAUDE_PLUGIN_ROOT} resolves here
+      .claude-plugin/
+        plugin.json      # manifest: name, version, description, author, keywords
+      skills/tasty-response/
+        SKILL.md           # the response-mode contract
+        build.py           # assembles templates/base.html from the parts below
+        check-contrast.py  # WCAG gate every theme must pass
+        styles/core.css    # structure; zero color literals
+        themes/*.css       # four palettes, tokens only
+        fonts/tr-body.css tr-display-nunito.css tr-display-fraunces.css
+        fonts/licenses/*.txt
+        templates/base.html   # GENERATED — never hand-patch
+        templates/_head.html templates/_tail.html
+      hooks/hooks.json
+      scripts/open-artifact.sh
+      scripts/open-artifact.ps1
   src/tr/
     cli.py  installer.py  config.py
   schemas/config.schema.json
   docs/
+  examples/
   tests/
 ```
 

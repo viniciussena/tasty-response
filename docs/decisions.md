@@ -513,3 +513,55 @@ terminal did, and an unexplained term costs a search.
 often enough that the groundwork sections read as padding. That is a
 detection failure, and the fix would be narrowing the triggers, not dropping
 the method.
+
+---
+
+## D-019 — The plugin root is `plugins/tasty-response/`, not `plugin/`
+
+**Status:** decided. Corrects the layout in architecture.md §1.
+
+The repository carried a `plugin/` directory holding `skills/tasty-response/`
+directly. **Claude Code has no `plugin/` convention.** Components are found at
+the *plugin root* — `skills/`, `hooks/`, `agents/`, `commands/`, `scripts/`,
+`bin/` — and a directory named `plugin/` is just a directory. Nothing was
+broken yet only because no manifest existed anywhere, so nothing had tried to
+load it.
+
+The manifest paths in `plugin.json` (`skills`, `hooks`, `agents`, …) could
+have been pointed at the old location instead. Rejected: it spends a manifest
+override to preserve a layout that has no reason to exist, and every reader
+who knows the convention then has to discover that this repo opted out of it.
+
+**Decided:** the shape `anthropics/claude-code` itself ships —
+
+```
+.claude-plugin/marketplace.json      # catalog, one entry
+plugins/tasty-response/              # the plugin root
+  .claude-plugin/plugin.json
+  skills/tasty-response/
+  hooks/            (M2)
+  scripts/          (M2)
+src/tr/  docs/  examples/  tests/    # repo, not plugin
+```
+
+Two properties made this the choice over putting the plugin at the repository
+root:
+
+| Property | Why it matters here |
+| --- | --- |
+| The repo is also a marketplace of one | `/plugin marketplace add viniciussena/tasty-response` then `/plugin install` works with no third-party catalog. A bare plugin repo with no `marketplace.json` has no such path |
+| Plugin and repo stay separable | `src/tr/` (the installer CLI), `docs/`, `examples/` and `tests/` are repository concerns, not plugin contents. At the repo root they would sit among `skills/` and `hooks/` |
+
+The manifest declares no component paths at all, which is the point: every
+component sits where the convention already looks for it.
+
+**Consequence worth stating:** the skill is invoked as
+`tasty-response:tasty-response`. The repetition looks like a mistake and is
+not — a plugin and its principal skill sharing a name is what Anthropic's own
+`frontend-design` plugin does.
+
+**Reverses if:** TR ever ships more than one plugin from this repository, in
+which case nothing changes structurally — `plugins/` already holds the plural
+case. Or if the marketplace-of-one turns out to be a worse install story than
+publishing into an existing catalog, which would drop `marketplace.json` and
+leave the rest intact.

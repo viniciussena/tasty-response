@@ -21,23 +21,25 @@ What exists:
 | Path | State |
 | --- | --- |
 | `docs/` | Complete. The design is settled; see the table below |
-| `plugin/skills/tasty-response/SKILL.md` | v0 written, **not yet validated** |
+| `.claude-plugin/marketplace.json` | Catalog entry, so the repo installs as a marketplace of one |
+| `plugins/tasty-response/.claude-plugin/plugin.json` | Manifest. Name, version, author — no components declared, since all sit at their default paths |
+| `plugins/tasty-response/skills/tasty-response/SKILL.md` | v0 written, **not yet validated** |
 | `.../styles/core.css` | Structure and components. **Zero color literals** — that invariant is what makes a theme one file |
 | `.../themes/*.css` | Four palettes, tokens only. `charred-citrus` is the default (D-012) |
 | `.../fonts/tr-body.css` | Atkinson Hyperlegible 400/700, subset, base64. ~24KB (D-014) |
 | `.../fonts/tr-display-*.css` | Display options, one per file. `nunito` is the default; `fraunces` is kept as the serif alternative (D-015) |
 | `.../fonts/licenses/` | OFL texts, inside the skill so they travel with the fonts wherever it is installed |
 | `.../templates/base.html` | **Generated** by `build.py`. Never hand-patch it — edit the source part and rebuild |
-| `plugin/hooks/`, `src/tr/`, `schemas/` | Not started (M2, M3) |
+| `plugins/tasty-response/hooks/`, `src/tr/`, `schemas/` | Not started (M2, M3) |
 
 Two scripts gate changes to the visual system, and both must pass:
 
 ```bash
-cd plugin/skills/tasty-response
+cd plugins/tasty-response/skills/tasty-response
 python build.py --check        # base.html still matches its sources
 python check-contrast.py       # every theme passes WCAG AA, both modes
 python build.py --theme cellar-gold   # rebuild with a different palette
-cd ../../.. && python examples/render.py   # regenerate the example artifacts
+cd ../../../.. && python examples/render.py   # regenerate the example artifacts
 ```
 
 `examples/` holds one real answer rendered in every theme, plus a contact
@@ -102,6 +104,14 @@ Verified against a real installed plugin, and differing from the archived
 plan:
 
 - The manifest is `.claude-plugin/plugin.json`, not a root `plugin.json`.
+- **There is no `plugin/` directory convention.** Components live at the
+  *plugin root* — `skills/`, `hooks/`, `agents/`, `commands/`, `scripts/` —
+  and the plugin root is `plugins/tasty-response/`, not the repository root
+  (D-019). A repo-root `.claude-plugin/marketplace.json` points at it, which
+  is the layout `anthropics/claude-code` itself ships.
+- A plugin skill is invoked as `<plugin>:<skill>`, so this one is
+  `tasty-response:tasty-response`. That repetition is normal — Anthropic's
+  own `frontend-design` plugin does the same.
 - Hooks live in `hooks/hooks.json` as `{"hooks": {"<Event>": [...]}}`, and
   hook commands reference their files via `${CLAUDE_PLUGIN_ROOT}`.
 - The Python package is `src/tr/`. Any reference to `src/vb/` is a leftover
