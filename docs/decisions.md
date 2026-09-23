@@ -116,7 +116,10 @@ keeping.
 
 ## D-008 — v0.1 is deliberately smaller than brief-spec v0.5
 
-**Status:** decided.
+**Status:** decided. Three of its terms were later changed: four themes, not
+one (D-012); no installer (D-020); and at most one hook, built only if
+evidence asks for it (D-021). The principle — validate on one harness before
+any portability work — stands.
 
 Claude Code only, one theme, one skill, two hook events, manual scoped
 installer, no export formats. The idea has to be validated on one harness
@@ -631,3 +634,53 @@ of a session *and* no in-skill fallback is acceptable — at which point a
 plugin's settings-level hook is the remaining option. Or if native
 `/plugin install` becomes the expected route for skills, which would add a
 `marketplace.json` without moving anything else.
+
+---
+
+## D-021 — The roadmap lives in the README, ordered by evidence
+
+**Status:** decided. Replaces `docs/implementation-plan.md`, which is deleted.
+
+Asked for directly: change the plan radically, keep a plugin rollout only as
+a possible future to be decided later — or put it all in the README and drop
+the file. The second was taken. Once TR became one skill with no installer
+(D-020), the plan shrank to four steps, and a four-row table does not need a
+document of its own. One fewer file is also one fewer place to drift: this
+revision found `architecture.md` still describing a configuration file that
+nothing read.
+
+**Decided — four steps, each waiting for evidence from the one before:**
+
+| Step | Earlier name | What changed |
+| --- | --- | --- |
+| 1. Validate the skill | M1 | Nothing. It remains the go/no-go |
+| 2. Release v0.1 | M3 | Now "ready to download": `LICENSE`, `npx skills` verified in both scopes, README sufficient on its own |
+| 3. Dogfood | M4 | Moved ahead of the hook |
+| 4. Silent opener | M2 | **Moved last, and made conditional** |
+
+Records before this one use the earlier names; the middle column translates.
+
+**Why the hook moved from second to last, and became optional.** The
+shell-step opener already works. The hook carries two questions nobody has
+verified — whether it fires in the same turn it is registered, and what its
+relative path resolves against — and its only gain over the current opener is
+removing a permission prompt the reader can already remove by allowlisting
+the command. Building it before dogfooding shows the prompt matters is
+plumbing ahead of evidence, which is what CLAUDE.md tells this project not to
+do.
+
+**Deferred with a condition instead of planned.** Two ideas are listed in the
+README under *Possible later*, each with what would justify deciding on it:
+
+- **Plugin package.** Worth deciding on only if the skill's own hook cannot
+  open the first artifact of a session, or if `/plugin` becomes the way
+  people expect to install skills. The `skills/` directory would not move.
+- **Config file.** Worth deciding on only if a setting needs to persist
+  across sessions and plain language cannot carry it. Removed from
+  architecture §6 rather than left there: it had no location and no reader,
+  so describing it in detail was a doc asserting behavior the artifact does
+  not have — the D-014 failure again.
+
+**Reverses if:** dogfooding shows the permission prompt is costly from day
+one, which pulls step 4 forward; or the roadmap grows past what a README
+table carries, which brings back a separate document.

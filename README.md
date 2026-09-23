@@ -2,10 +2,11 @@
 
 > Turns any Claude Code answer into a colorful, didactic single-page HTML you actually want to read.
 
-**Status: M1.** The skill works end to end and opens the artifact itself.
-It has not yet been validated against real dense answers, which is the
-go/no-go for the project — see
-[docs/implementation-plan.md](docs/implementation-plan.md).
+**Status: works, not yet validated.** The skill installs, writes the
+artifact, and opens it. Whether the artifact actually reads *better* than the
+terminal answer has not been tested on real dense answers yet — that is the
+next step, and it decides whether the project continues. See
+[Roadmap](#roadmap).
 
 ## Install
 
@@ -27,6 +28,8 @@ cp -r tasty-response/skills/tasty-response ~/.claude/skills/          # every pr
 cp -r tasty-response/skills/tasty-response .claude/skills/            # this project only
 ```
 
+Then **start a new Claude Code session** and ask something substantive.
+
 **To remove it**, run `npx skills remove tasty-response -a claude-code` (add
 `-g` if you installed globally), or delete the directory by hand. TR itself
 keeps nothing anywhere else except the artifacts it wrote to
@@ -36,8 +39,6 @@ One thing `npx skills` leaves behind: in project scope it writes a
 `skills-lock.json` at the project root, and `remove` deletes the skill but
 **not** that file's `tasty-response` entry. Delete the entry — or the file,
 if TR was its only skill — yourself.
-
-Start a new Claude Code session afterwards, and ask something substantive.
 
 ## The problem
 
@@ -54,9 +55,10 @@ self-contained HTML file** — sectioned, high contrast, dark by default — and
 **opened automatically in your browser**. The terminal keeps a short summary
 plus the file path, so nothing is lost if you miss the tab.
 
-*(Today the skill runs the opener itself as a shell step, so the first one in
-a session may ask for permission. A hook declared in the skill's own
-frontmatter will do it silently — that is M2.)*
+*(The skill runs the opener itself as a shell step, so the first one in a
+session may ask for permission. Allowlisting the command removes the prompt.
+A silent hook is on the [Roadmap](#roadmap), only if the prompt turns out to
+matter.)*
 
 ```
 you ask something substantive
@@ -80,7 +82,7 @@ Four properties distinguish it from adjacent tools:
 | --- | --- |
 | Always-on, not invoked | You never ask for the visual; it is the default response mode |
 | One self-contained file | No CDN, no network requests — opens offline, survives being emailed |
-| Content contract, not just CSS | The writing itself must be concise, concrete, complete, didactic |
+| Content contract, not just CSS | The writing itself must be concise, concrete, complete, direct, and didactic |
 | Every page opens with a docket | Project, path, and what you asked — so six open tabs stay tellable apart |
 
 ## Is this wasteful?
@@ -134,14 +136,44 @@ If artifacts are not appearing, check these four, in order:
    there but no tab opened, the opener was skipped; the path in the terminal
    still works.
 
+## Roadmap
+
+Ordered by evidence: each step waits until the one before it has shown it is
+worth doing.
+
+| Step | State | Done when |
+| --- | --- | --- |
+| **1. Validate the skill** | **Now** | Two or three real dense answers, regenerated under the skill, read *better* than the originals — a specific fact is found faster, and the headlines alone still deliver the answer |
+| **2. Release v0.1** | Mostly done | A `LICENSE` exists; `npx skills add` is verified in both scopes on a clean machine; someone new gets a first artifact from this README alone |
+| **3. Dogfood** | After release | A normal week of real work without wanting to turn it off, counting artifacts that fired when they should not have and the ones that were missed |
+| **4. Silent opener** | Only if step 3 asks | The shell-step permission prompt proves to be a real cost. Then a `PostToolUse` hook in the skill's frontmatter — after checking on a real machine that it fires in the same turn it is registered |
+
+**Step 1 is the go/no-go.** If the output is a styled wall of the same prose,
+the content contract is not working, and the skill is rewritten before
+anything else happens. No amount of packaging fixes a page that is not easier
+to read.
+
+**One rule holds at every step:** TR must never fail a Claude Code turn. A
+broken opener degrades to "the file exists, the path is in the terminal" —
+never to an error.
+
+### Possible later, to be decided later
+
+Neither of these is planned. Each has a condition that would put it on the
+table, and until that condition shows up it stays here.
+
+| Idea | What it would add | What would justify deciding on it |
+| --- | --- | --- |
+| **Ship as a Claude Code plugin** | Native `/plugin install`, and a hook registered in settings — active before the first turn, not only after the skill's first use | The skill's own hook proves unable to open the first artifact of a session, or `/plugin` becomes the way people expect to install skills. The `skills/` directory would not move either way |
+| **A config file** | Persistent settings: a default theme, output directory, retention | A setting people want to keep across sessions that asking in plain language cannot carry. Today "turn off tasty-response" and "use cellar-gold" cover what has come up |
+
 ## Documentation
 
 | Document | What it covers |
 | --- | --- |
-| [docs/architecture.md](docs/architecture.md) | Layout, control flow, the skill-declared hook, config schema, failure modes |
+| [docs/architecture.md](docs/architecture.md) | Layout, control flow, opening the artifact, failure modes |
 | [docs/design-principles.md](docs/design-principles.md) | The didactic content contract and the visual system spec |
-| [docs/decisions.md](docs/decisions.md) | Decision records, including the ones that closed the original open questions |
-| [docs/implementation-plan.md](docs/implementation-plan.md) | Milestones, exit criteria, risks |
+| [docs/decisions.md](docs/decisions.md) | Decision records: what was decided, why, and what would reverse it |
 | [CLAUDE.md](CLAUDE.md) | Working agreement for Claude Code inside this repository |
 
 ## Prior art

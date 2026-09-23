@@ -6,13 +6,15 @@ yet; this document is the contract the implementation must satisfy.
 ## 1. Component map
 
 TR ships as a **Claude Code skill** — not a plugin, and with no installer of
-its own (D-020). Three parts, all inside one directory:
+its own (D-020). Everything lives in one directory. The skill exists; the hook
+and its script are built only if the roadmap reaches step 4 (README,
+Roadmap):
 
 | Component | Path in repo | Responsibility |
 | --- | --- | --- |
 | Skill | `skills/tasty-response/SKILL.md` | Instructs Claude *what* to generate: visual system, didactic contract, HTML rules |
-| Hook | frontmatter `hooks:` inside that same `SKILL.md` | Registers `PostToolUse` so the artifact opens without a shell step (M2) |
-| Hook script | `skills/tasty-response/scripts/open-artifact.*` | Side effect: open the generated file in a browser, per OS |
+| Hook *(conditional)* | frontmatter `hooks:` inside that same `SKILL.md` | Registers `PostToolUse` so the artifact opens without a shell step or a permission prompt |
+| Hook script *(conditional)* | `skills/tasty-response/scripts/open-artifact.*` | Side effect: open the generated file in a browser, per OS |
 
 The skill directory is self-contained: everything it needs at runtime lives
 inside it, so installing is copying one directory and uninstalling is
@@ -51,11 +53,9 @@ tasty-response/
     fonts/licenses/*.txt
     templates/base.html      # GENERATED — never hand-patch
     templates/_head.html templates/_tail.html
-    scripts/open-artifact.sh scripts/open-artifact.ps1   # M2
-  schemas/config.schema.json
+    scripts/open-artifact.sh scripts/open-artifact.ps1   # only if roadmap step 4
   docs/
   examples/
-  tests/
 ```
 
 The repository path mirrors the install path on purpose: `skills/` here
@@ -101,8 +101,8 @@ hooks:
           command: "./scripts/open-artifact.sh"
 ```
 
-Two consequences to verify on a real machine before M2 counts as done, rather
-than to assume from the documentation (the lesson of D-014):
+Two consequences to verify on a real machine before the hook is relied on,
+rather than to assume from the documentation (the lesson of D-014):
 
 | Question | Why it matters |
 | --- | --- |
@@ -123,7 +123,8 @@ cannot do that before it has been invoked once — its hooks register on
 invocation — so the first activation of a session comes from the skill's own
 `description`, which is what the always-on framing actually rests on. A
 `UserPromptSubmit` reminder can still be declared for the turns *after* the
-first, and whether it is needed is an M4 measurement, not an assumption.
+first, and whether it is needed is a dogfooding measurement (roadmap step 3),
+not an assumption.
 
 ## 3. Artifact location and naming
 
@@ -155,56 +156,53 @@ Skip when:
 
 - The answer is an acknowledgement, a confirmation, or a single fact.
 - The user is mid-debug and wants a fast, terse loop.
-- The session's config sets `enabled: false`, or the user has used the
-  opt-out phrase this turn.
+- The user has opted out, for this turn or for the session (SKILL.md §1).
 
 The heuristic errs toward *skipping*. A missing artifact costs a scroll; a
 spurious one costs a browser tab and trains the user to ignore the mode.
 
 ## 5. Opening the artifact
 
-| OS | Command |
+The per-OS commands live in **SKILL.md §2, and that table is authoritative**.
+This section does not repeat it, so the two cannot disagree; it specifies how
+any opener must behave.
+
+**An opener must never block or fail the response.** Every failure degrades
+to "the file exists, the path was printed". Two openers are in play, and
+today only the first exists:
+
+| Condition | Detection | Behavior | Skill opener (today) | Hook (step 4) |
+| --- | --- | --- | --- | --- |
+| Headless / SSH | no `DISPLAY`/`WAYLAND_DISPLAY`, `SSH_CONNECTION` set | skip open, path only | yes | required |
+| Opener missing | command not found | skip open, path only | yes | required |
+| Reader declines the permission prompt | the shell step is refused | skip open, path only | yes | not applicable — a hook does not prompt |
+| Open command hangs | timeout (3s) | detach or abandon, never block | **no** | required |
+| Path is not a TR artifact | prefix + extension check | no-op | **no** | required |
+
+The two **no** rows are the accepted costs of D-016: the model chooses the
+path and opens it, so nothing independent checks the path. That is tolerable
+while the skill runs on its author's machine and not after. **The path check
+is a security boundary, not tidiness** — a hook receives a path chosen by the
+model and must refuse anything outside the artifact directory. It is the first
+thing the hook script must get right.
+
+## 6. Configuration: none in v0.1
+
+**No component reads a configuration file**, so none is specified. An earlier
+draft described one in detail; it had no location and nothing consumed it,
+which is a doc asserting a behavior the artifact does not have (D-014, D-021).
+
+What people have actually needed is covered without one:
+
+| Need | How, today |
 | --- | --- |
-| macOS | `open <file>` |
-| Linux (GUI) | `xdg-open <file>` |
-| Windows | `start "" <file>` |
-| WSL | `wslview <file>`, falling back to `explorer.exe` on the translated path |
+| Skip one answer, or the rest of the session | Say so — SKILL.md §1 |
+| Another theme for one artifact | Ask for it by name — SKILL.md §2 |
+| Another default theme, permanently | Rebuild the installed copy: `python build.py --theme cellar-gold`. A later `npx skills` update overwrites it |
+| Turn it off for good | Remove the skill directory |
 
-**The hook must never block or fail the response.** It exits 0
-unconditionally. Every failure path degrades to "the file exists, the path was
-printed":
-
-| Condition | Detection | Behavior |
-| --- | --- | --- |
-| Headless / SSH | no `DISPLAY`/`WAYLAND_DISPLAY`, `SSH_CONNECTION` set | skip open, path only |
-| Opener missing | command not found | skip open, path only |
-| Open command hangs | timeout (3s) | detach or abandon, never block |
-| Path is not a TR artifact | prefix + extension check | no-op |
-| `auto_open: false` | config | skip open, path only |
-
-The path check is a security boundary, not just tidiness: the hook receives a
-path chosen by the model and must refuse anything outside the configured
-artifact directory.
-
-## 6. Configuration
-
-A JSON file per scope, edited by hand — there is no `tr config` (D-020) —
-and validated by `schemas/config.schema.json`. Everything in it is optional:
-the defaults are the product, and natural-language opt-out (SKILL.md §1)
-covers the common case without touching a file.
-
-| Key | Type | Default | Effect |
-| --- | --- | --- | --- |
-| `enabled` | bool | `true` | Master switch for the response mode |
-| `auto_open` | bool | `true` | Whether the hook opens the browser |
-| `theme` | enum | `"charred-citrus"` | `charred-citrus` \| `cellar-gold` \| `patisserie` \| `matcha-ceramic` (D-012) |
-| `activation` | enum | `"substantive"` | `substantive` \| `always` \| `on-request` |
-| `keep_terminal_text` | enum | `"summary"` | `summary` \| `full` \| `path-only` |
-| `artifact_dir` | string | scope default | Override the output directory |
-| `retention_days` | int | `30` | Artifacts older than this are candidates for pruning |
-
-Project config overrides user config key by key. A project that sets nothing
-inherits everything.
+A config file is in the README under *Possible later*, with the condition
+that would justify it.
 
 ## 7. Distribution and installation
 
@@ -232,9 +230,10 @@ artifact directory is writable and gitignored.
 
 ## 8. Non-goals for v0.1
 
-Claude Code only. `npx skills` can install into other agents, but the opener,
-the hook, and the activation heuristic are verified against Claude Code
-alone. One theme. No PDF or
-audio export. No auto-detection matrix in the installer. No `--scope global`
-until Claude Code exposes a machine-wide policy layer; `user` is effectively
-global per account.
+- **Other agents.** `npx skills` can install TR into Codex, Cursor and others,
+  but the opener and the activation heuristic are verified against Claude
+  Code alone.
+- **A plugin package and a config file.** Both are in the README under
+  *Possible later*, each with the condition that would justify deciding on it.
+- **Export formats.** No PDF, no audio.
+- **A theme marketplace.** Four themes ship; adding one is a single file.

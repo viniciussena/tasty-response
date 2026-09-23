@@ -12,7 +12,7 @@ terminal text. It is distributed straight from GitHub and installed with
 Claude Code answer into a colorful, didactic single-page HTML you actually
 want to read.*
 
-## Current state: M1 in progress
+## Current state: validating the skill (roadmap step 1)
 
 **There is no test suite and no dependency manifest.** The only tooling is
 the two scripts below, which need nothing but a stdlib Python. Do not invent
@@ -32,8 +32,8 @@ What exists:
 | `.../fonts/tr-display-*.css` | Display options, one per file. `nunito` is the default; `fraunces` is kept as the serif alternative (D-015) |
 | `.../fonts/licenses/` | OFL texts, inside the skill so they travel with the fonts wherever it is installed |
 | `.../templates/base.html` | **Generated** by `build.py`. Never hand-patch it — edit the source part and rebuild |
-| `.../scripts/`, frontmatter `hooks:` | Not started (M2) |
-| `schemas/`, `LICENSE` | Not started (M3) |
+| `.../scripts/`, frontmatter `hooks:` | Not started, and conditional — built only if dogfooding shows the shell-step prompt matters (roadmap step 4) |
+| `LICENSE` | Missing. Needed for release (roadmap step 2) |
 
 Two scripts gate changes to the visual system, and both must pass:
 
@@ -50,14 +50,15 @@ sheet. Both are generated — the swatches are parsed out of the theme files,
 so they cannot drift. Re-run `render.py` after any change to the visual
 system.
 
-The open task is M1 step 3: regenerate 2-3 real dense past answers under the
-skill and judge whether the artifact reads *better*, not merely prettier.
+The open task is roadmap step 1: regenerate 2-3 real dense past answers under
+the skill and judge whether the artifact reads *better*, not merely prettier.
+The roadmap lives in the README — there is no separate plan document (D-021).
 Until that passes, treat the skill as unproven and do not build plumbing
 around it.
 
 Everything inside `skills/tasty-response/` ships to every user who installs.
-Anything that is for developing TR rather than running it — docs, examples,
-tests — belongs **outside** that directory. `build.py` and
+Anything that is for developing TR rather than running it — docs, examples —
+belongs **outside** that directory. `build.py` and
 `check-contrast.py` are the accepted exception: small, stdlib-only, and useful
 to anyone who wants to rebuild with another theme.
 
@@ -68,10 +69,10 @@ disagree with the archived plan in places.
 
 | Document | Authoritative for |
 | --- | --- |
-| [docs/architecture.md](docs/architecture.md) | Layout, control flow, hooks, config schema, failure modes |
+| [README.md](README.md) | Install, and the **Roadmap** — step order, what counts as done, and what is deferred until evidence asks for it |
+| [docs/architecture.md](docs/architecture.md) | Layout, control flow, opening the artifact, failure modes |
 | [docs/design-principles.md](docs/design-principles.md) | Content contract and visual system |
 | [docs/decisions.md](docs/decisions.md) | Why things are the way they are, and what would reverse them |
-| [docs/implementation-plan.md](docs/implementation-plan.md) | Milestone order and exit criteria |
 | [docs/archive/PLAN.md](docs/archive/PLAN.md) | Historical only — **superseded**, do not treat as current |
 
 ## Constraints that are easy to violate
@@ -92,7 +93,7 @@ These are the decisions most likely to be undone by accident:
 - **Activation errs toward skipping.** A spurious browser tab is more costly
   than a missing one, because it trains the user to ignore the mode (D-006).
 - **Style is not the lever.** The content contract — concise, concrete,
-  complete, didactic — is what reduces cognitive load. A beautifully themed
+  complete, direct, didactic — is what reduces cognitive load. A beautifully themed
   wall of unrestructured prose is the project's main failure mode.
 - **Least friction wins ties.** When a choice is between the more legible
   option and the more elegant one, legibility takes it — even when the
@@ -123,8 +124,8 @@ and `vercel-labs/skills`. An earlier layout got these wrong (D-019, D-020):
   user's `settings.json`.
 - Whether such a hook fires for a `Write` in the *same* turn it was
   registered, and what a relative `./scripts/...` resolves against, are
-  **unverified**. Settle them on a real machine in M2 before relying on
-  either (architecture §2).
+  **unverified**. Settle them on a real machine before building the hook
+  (roadmap step 4, architecture §2).
 
 ## Conventions
 

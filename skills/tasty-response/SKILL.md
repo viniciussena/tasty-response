@@ -47,7 +47,7 @@ the mode is the default; the escape hatch is what makes that tolerable.
 
 ## 2. Write the artifact
 
-Write with the ordinary file-writing tool to the configured artifact
+Write with the ordinary file-writing tool to the artifact
 directory — `.tasty-response/` at the project root, or `~/.tasty-response/`
 for a user-scope install. Filename:
 
