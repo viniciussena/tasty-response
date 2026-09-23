@@ -27,8 +27,15 @@ cp -r tasty-response/skills/tasty-response ~/.claude/skills/          # every pr
 cp -r tasty-response/skills/tasty-response .claude/skills/            # this project only
 ```
 
-**To remove it**, delete that directory. TR keeps nothing anywhere else except
-the artifacts it wrote to `.tasty-response/`.
+**To remove it**, run `npx skills remove tasty-response -a claude-code` (add
+`-g` if you installed globally), or delete the directory by hand. TR itself
+keeps nothing anywhere else except the artifacts it wrote to
+`.tasty-response/`.
+
+One thing `npx skills` leaves behind: in project scope it writes a
+`skills-lock.json` at the project root, and `remove` deletes the skill but
+**not** that file's `tasty-response` entry. Delete the entry — or the file,
+if TR was its only skill — yourself.
 
 Start a new Claude Code session afterwards, and ask something substantive.
 
