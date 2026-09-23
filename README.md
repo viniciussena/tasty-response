@@ -2,11 +2,35 @@
 
 > Turns any Claude Code answer into a colorful, didactic single-page HTML you actually want to read.
 
-**Status: M1.** The skill and the visual system exist and are installable by
-hand, and the skill opens the artifact itself (D-016). The `PostToolUse` hook
-that will take that job over, and the `tr` installer, do not exist yet.
-See [docs/implementation-plan.md](docs/implementation-plan.md) for what is
-still missing and what has to be true before it lands.
+**Status: M1.** The skill works end to end and opens the artifact itself.
+It has not yet been validated against real dense answers, which is the
+go/no-go for the project — see
+[docs/implementation-plan.md](docs/implementation-plan.md).
+
+## Install
+
+```bash
+npx skills add viniciussena/tasty-response -a claude-code      # this project only
+npx skills add viniciussena/tasty-response -g -a claude-code   # every project
+```
+
+That is the whole installation. It is a single [Claude Code
+skill](https://code.claude.com/docs/en/skills) — one directory — installed
+by [`npx skills`](https://github.com/vercel-labs/skills). Nothing is written to
+your `settings.json`.
+
+**Without Node**, copy the directory yourself:
+
+```bash
+git clone https://github.com/viniciussena/tasty-response
+cp -r tasty-response/skills/tasty-response ~/.claude/skills/          # every project
+cp -r tasty-response/skills/tasty-response .claude/skills/            # this project only
+```
+
+**To remove it**, delete that directory. TR keeps nothing anywhere else except
+the artifacts it wrote to `.tasty-response/`.
+
+Start a new Claude Code session afterwards, and ask something substantive.
 
 ## The problem
 
@@ -24,8 +48,8 @@ self-contained HTML file** — sectioned, high contrast, dark by default — and
 plus the file path, so nothing is lost if you miss the tab.
 
 *(Today the skill runs the opener itself as a shell step, so the first one in
-a session may ask for permission. The hook that does it silently is M2 —
-see D-016.)*
+a session may ask for permission. A hook declared in the skill's own
+frontmatter will do it silently — that is M2.)*
 
 ```
 you ask something substantive
@@ -85,18 +109,29 @@ palette passes WCAG AA in both modes, verified by a script rather than by
 eye, and both the display and body faces travel inside the file as base64 —
 so the page is still one self-contained document that opens offline.
 
-## Scope control
+## Turning it off
 
-Installation is explicit and reversible, at one of two levels:
+Say so. *"No HTML this time"* skips one answer; *"turn off tasty-response"*
+skips the rest of the session. Nothing to configure, and the skill never
+argues. To remove it for good, delete its directory (see Install).
 
-- `--scope project` — writes into `.claude/` of one repository.
-- `--scope user` — writes into `~/.claude/`, applying to every session.
+## Checking an install
+
+If artifacts are not appearing, check these four, in order:
+
+1. The directory exists at `~/.claude/skills/tasty-response/` or
+   `.claude/skills/tasty-response/`, with `SKILL.md` directly inside it.
+2. You started a **new** session after installing.
+3. The answer was substantive — TR deliberately skips short ones.
+4. `.tasty-response/` exists in the project and is writable. If the file is
+   there but no tab opened, the opener was skipped; the path in the terminal
+   still works.
 
 ## Documentation
 
 | Document | What it covers |
 | --- | --- |
-| [docs/architecture.md](docs/architecture.md) | Components, control flow, hook integration, config schema, failure modes |
+| [docs/architecture.md](docs/architecture.md) | Layout, control flow, the skill-declared hook, config schema, failure modes |
 | [docs/design-principles.md](docs/design-principles.md) | The didactic content contract and the visual system spec |
 | [docs/decisions.md](docs/decisions.md) | Decision records, including the ones that closed the original open questions |
 | [docs/implementation-plan.md](docs/implementation-plan.md) | Milestones, exit criteria, risks |
@@ -109,9 +144,7 @@ in a real gap rather than duplicating existing work:
 
 - **brief-spec** standardizes *which fields* a terminal handoff contains
   (Status, Outcome, Proof, Gaps, Next). tasty-response leaves the answer's
-  shape free and standardizes *how it is rendered and delivered*. The
-  installer pattern — scoped install, atomic writes, doctor, uninstall — is
-  deliberately borrowed.
+  shape free and standardizes *how it is rendered and delivered*.
 - **Slide-deck skills** (html-slides, reveal.js, ss-make-slides) build decks
   *on request*, optimized for pitch aesthetics. They are invoked, not a
   persistent response mode.

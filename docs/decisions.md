@@ -82,7 +82,8 @@ makes always-on tolerable.
 **Status:** decided.
 
 `--scope project` writes to a repository's `.claude/`; `--scope user` writes
-to `~/.claude/`. There is no machine-wide policy layer to target, so `user`
+to `~/.claude/`. *(Since D-020 these are `npx skills add` without and with
+`-g`, not TR flags. The two scopes are unchanged.)* There is no machine-wide policy layer to target, so `user`
 is effectively global per account. Project config overrides user config key
 by key.
 
@@ -359,7 +360,10 @@ not an aesthetic one.
 
 ## D-016 — During M1, the skill opens the artifact itself
 
-**Status:** decided, provisional. Narrows D-002 for M1 only.
+**Status:** decided, provisional. Narrows D-002 for M1 only. **Its premise
+was wrong** — a skill *can* register a hook, from its own frontmatter
+(D-020). The M1 behavior stands; the reason it had to be provisional does
+not.
 
 D-002 assigns the opening to a `PostToolUse` hook. A hook cannot be
 registered from a skill — it needs `settings.json` or a plugin manifest — so
@@ -518,7 +522,9 @@ the method.
 
 ## D-019 — The plugin root is `plugins/tasty-response/`, not `plugin/`
 
-**Status:** decided. Corrects the layout in architecture.md §1.
+**Status:** superseded by D-020 on the same day. TR is not a plugin. The
+finding about `plugin/` stands; the `plugins/<name>/` layout it produced was
+removed.
 
 The repository carried a `plugin/` directory holding `skills/tasty-response/`
 directly. **Claude Code has no `plugin/` convention.** Components are found at
@@ -565,3 +571,63 @@ which case nothing changes structurally — `plugins/` already holds the plural
 case. Or if the marketplace-of-one turns out to be a worse install story than
 publishing into an existing catalog, which would drop `marketplace.json` and
 leave the rest intact.
+
+---
+
+## D-020 — TR is a skill distributed from GitHub, not a plugin
+
+**Status:** decided. Supersedes D-019, drops the `tr` installer (M3), and
+removes the premise of D-016.
+
+Asked for directly: *"I want only a skill, not a plugin — on GitHub, easy and
+ready to download, the way people have been doing it."*
+
+Three findings made that cheaper than it sounds, and all three were verified
+against current documentation and live repositories rather than assumed:
+
+| Finding | Source | What it removed |
+| --- | --- | --- |
+| **A skill can declare hooks in its own frontmatter**, same format as settings files, registered on invocation for the rest of the session | Claude Code hooks docs, "Hooks in skills and agents" | The only thing the plugin was buying. D-016 said a skill could not register a hook; that was wrong |
+| **`skills/<name>/SKILL.md` is the distribution layout** | `anthropics/skills`; the flat-layout search in `vercel-labs/skills` | Any need for a manifest, a marketplace catalog, or a `plugins/` level |
+| **`npx skills add owner/repo` installs a skill from GitHub**, project scope by default and user scope with `-g` | `vercel-labs/skills` | The entire `tr setup` / `tr uninstall` installer — it would have reimplemented this |
+
+**Decided:**
+
+```
+skills/tasty-response/     # the skill; copied verbatim on install
+docs/  examples/  README.md  CLAUDE.md
+```
+
+Installation is one command, or a `cp -r` without Node. Nothing is written to
+the user's `settings.json`, which removes the failure the original design
+feared most — a half-written hook entry breaking every session. The skill
+directory is all of TR, so uninstalling is deleting it.
+
+### What was given up, stated plainly
+
+- **Native `/plugin install`.** That route needs a `marketplace.json`, which
+  is the plugin machinery this decision declines. `anthropics/skills` itself
+  ships both a `skills/` tree and a marketplace. Adding one later is purely
+  additive: the `skills/` layout would not move.
+- **`tr config` and `tr doctor`.** Config becomes a hand-edited JSON file,
+  all of it optional; natural-language opt-out already covers the common
+  case. The doctor's checks move into the README as four manual steps.
+- **The `.gitignore` entry `tr setup` would have written.** That job moves
+  into SKILL.md, which now appends `.tasty-response/` before the first
+  project-scope write. Moving it was necessary: architecture §3 asserting a
+  behavior no component performed would repeat the mistake of D-014.
+
+### Two things this makes unverified, not solved
+
+A skill hook is registered **when the skill is invoked**. Whether it fires
+for a `Write` inside that same turn — the very first artifact of a session —
+is not stated anywhere. Neither is what a relative `./scripts/...` path in
+the frontmatter resolves against. Both are M2 step 2, on a real machine.
+Until then, the in-skill opener of D-016 stays, because it is the path known
+to work.
+
+**Reverses if:** the skill hook turns out unable to open the first artifact
+of a session *and* no in-skill fallback is acceptable — at which point a
+plugin's settings-level hook is the remaining option. Or if native
+`/plugin install` becomes the expected route for skills, which would add a
+`marketplace.json` without moving anything else.

@@ -59,6 +59,13 @@ for a user-scope install. Filename:
 Sorting by name sorts by time, which is the property that matters once the
 directory grows.
 
+**Keep artifacts out of version control.** Before the first write into a
+project's `.tasty-response/`, check the repository's `.gitignore` for a line
+covering it. If there is none, append `.tasty-response/` — one line, nothing
+else, and say so in the terminal. If there is no `.gitignore`, or the project
+is not a git repository, skip this silently. Artifacts are disposable output;
+nobody should find forty of them in a pull request.
+
 Build from `templates/base.html`, replacing every `{{...}}` placeholder.
 Everything it needs — the display face, the structure, the palette — is
 already inlined. Keep it that way; never link anything out.

@@ -4,42 +4,45 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## What this repository is
 
-`tasty-response` (TR) is a Claude Code plugin that makes substantive answers
-render as a single self-contained HTML artifact, opened automatically in the
-browser, instead of a wall of terminal text. Tagline: *turns any answer into
-a colorful, single-page HTML you actually want to read.*
+`tasty-response` (TR) is a **Claude Code skill** — one directory, not a
+plugin — that makes substantive answers render as a single self-contained
+HTML artifact, opened automatically in the browser, instead of a wall of
+terminal text. It is distributed straight from GitHub and installed with
+`npx skills add viniciussena/tasty-response` (D-020). Tagline: *turns any
+Claude Code answer into a colorful, didactic single-page HTML you actually
+want to read.*
 
 ## Current state: M1 in progress
 
 **There is no test suite and no dependency manifest.** The only tooling is
 the two scripts below, which need nothing but a stdlib Python. Do not invent
-commands for tooling that does not exist, and do not report a `tr` CLI as
-runnable — it is specified, not built.
+commands for tooling that does not exist. There is no `tr` CLI and none is
+planned — installation is `npx skills` or a directory copy (D-020).
 
 What exists:
 
 | Path | State |
 | --- | --- |
 | `docs/` | Complete. The design is settled; see the table below |
-| `.claude-plugin/marketplace.json` | Catalog entry, so the repo installs as a marketplace of one |
-| `plugins/tasty-response/.claude-plugin/plugin.json` | Manifest. Name, version, author — no components declared, since all sit at their default paths |
-| `plugins/tasty-response/skills/tasty-response/SKILL.md` | v0 written, **not yet validated** |
+| `skills/tasty-response/` | **The skill — this whole directory is what gets installed.** Copied verbatim to `.claude/skills/tasty-response/` |
+| `.../SKILL.md` | v0 written, **not yet validated** |
 | `.../styles/core.css` | Structure and components. **Zero color literals** — that invariant is what makes a theme one file |
 | `.../themes/*.css` | Four palettes, tokens only. `charred-citrus` is the default (D-012) |
 | `.../fonts/tr-body.css` | Atkinson Hyperlegible 400/700, subset, base64. ~24KB (D-014) |
 | `.../fonts/tr-display-*.css` | Display options, one per file. `nunito` is the default; `fraunces` is kept as the serif alternative (D-015) |
 | `.../fonts/licenses/` | OFL texts, inside the skill so they travel with the fonts wherever it is installed |
 | `.../templates/base.html` | **Generated** by `build.py`. Never hand-patch it — edit the source part and rebuild |
-| `plugins/tasty-response/hooks/`, `src/tr/`, `schemas/` | Not started (M2, M3) |
+| `.../scripts/`, frontmatter `hooks:` | Not started (M2) |
+| `schemas/`, `LICENSE` | Not started (M3) |
 
 Two scripts gate changes to the visual system, and both must pass:
 
 ```bash
-cd plugins/tasty-response/skills/tasty-response
+cd skills/tasty-response
 python build.py --check        # base.html still matches its sources
 python check-contrast.py       # every theme passes WCAG AA, both modes
 python build.py --theme cellar-gold   # rebuild with a different palette
-cd ../../../.. && python examples/render.py   # regenerate the example artifacts
+cd ../.. && python examples/render.py   # regenerate the example artifacts
 ```
 
 `examples/` holds one real answer rendered in every theme, plus a contact
@@ -52,10 +55,11 @@ skill and judge whether the artifact reads *better*, not merely prettier.
 Until that passes, treat the skill as unproven and do not build plumbing
 around it.
 
-The planned commands, once M3 lands, are `tr setup --scope {project,user}`,
-`tr uninstall`, `tr config`, and `tr doctor`. See
-[docs/implementation-plan.md](docs/implementation-plan.md) for what must be
-true before each exists.
+Everything inside `skills/tasty-response/` ships to every user who installs.
+Anything that is for developing TR rather than running it — docs, examples,
+tests — belongs **outside** that directory. `build.py` and
+`check-contrast.py` are the accepted exception: small, stdlib-only, and useful
+to anyone who wants to rebuild with another theme.
 
 ## Where the design lives
 
@@ -98,24 +102,29 @@ These are the decisions most likely to be undone by accident:
   documentation asserts about the output must be verified against a real
   machine, not against the CSS (D-014).
 
-## Plugin structure facts
+## Skill structure facts
 
-Verified against a real installed plugin, and differing from the archived
-plan:
+Verified against the current Claude Code docs and against `anthropics/skills`
+and `vercel-labs/skills`. An earlier layout got these wrong (D-019, D-020):
 
-- The manifest is `.claude-plugin/plugin.json`, not a root `plugin.json`.
-- **There is no `plugin/` directory convention.** Components live at the
-  *plugin root* — `skills/`, `hooks/`, `agents/`, `commands/`, `scripts/` —
-  and the plugin root is `plugins/tasty-response/`, not the repository root
-  (D-019). A repo-root `.claude-plugin/marketplace.json` points at it, which
-  is the layout `anthropics/claude-code` itself ships.
-- A plugin skill is invoked as `<plugin>:<skill>`, so this one is
-  `tasty-response:tasty-response`. That repetition is normal — Anthropic's
-  own `frontend-design` plugin does the same.
-- Hooks live in `hooks/hooks.json` as `{"hooks": {"<Event>": [...]}}`, and
-  hook commands reference their files via `${CLAUDE_PLUGIN_ROOT}`.
-- The Python package is `src/tr/`. Any reference to `src/vb/` is a leftover
-  from the abandoned `visual-brief` name.
+- **A skill is a directory named after itself, holding `SKILL.md`.** No
+  manifest, no registry. It lives at `.claude/skills/<name>/` (project) or
+  `~/.claude/skills/<name>/` (user), and the directory existing *is* the
+  installation.
+- **`skills/<name>/SKILL.md` is the distribution layout.** Both
+  `anthropics/skills` and the `npx skills` flat-layout search use it.
+- **Never put a `SKILL.md` at the repository root.** `npx skills` lets a
+  shallower `SKILL.md` shadow everything nested below it, so a root one would
+  hide the real skill. The same applies to `.claude/skills/` in this repo,
+  which `npx skills` also searches.
+- **A skill can declare hooks in its own frontmatter** (`hooks:`, same format
+  as settings files). Claude Code registers them on invocation and keeps them
+  for the session. That is why TR needs no plugin and never touches the
+  user's `settings.json`.
+- Whether such a hook fires for a `Write` in the *same* turn it was
+  registered, and what a relative `./scripts/...` resolves against, are
+  **unverified**. Settle them on a real machine in M2 before relying on
+  either (architecture §2).
 
 ## Conventions
 
@@ -128,6 +137,6 @@ plan:
 
 ## A note on dogfooding
 
-Developing TR is not the same as running TR. Unless the plugin is actually
+Developing TR is not the same as running TR. Unless the skill is actually
 installed in this session, answers here are ordinary Claude Code answers —
 do not generate `.tasty-response/` artifacts by hand to simulate the feature.
