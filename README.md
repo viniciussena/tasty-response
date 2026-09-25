@@ -2,6 +2,24 @@
 
 > Turns any Claude Code answer into a colorful, didactic single-page HTML you actually want to read.
 
+**You ask Claude Code:**
+
+> I added an index on orders(created_at) but this query still takes 4 seconds. Why isn't Postgres using it?
+
+**The terminal gives you the short version and a path:**
+
+```
+The index is fine: date_trunc() around created_at hides the column from it, so Postgres
+scans all 12M rows. Rewrite the filter as a created_at range and the same index answers it.
+→ .tasty-response/2026-09-25-1012-index-skipped.html
+```
+
+**And this opens in your browser:**
+
+<a href="examples/demo.png"><img src="examples/demo.png" alt="The answer rendered as a tasty-response page: a docket with the project, the question and the pasted EXPLAIN output, then the headline 'The index is fine — the query hides the column from it' and a first section that shows the cause, the sequential-scan plan and the rule" width="720"></a>
+
+<sub>A made-up question with a made-up answer, rendered through the real template in the default theme. The full page, four sections, is in [examples/demo.html](examples/demo.html); clone the repo to open it, since GitHub shows HTML files as source.</sub>
+
 **Status: works, not yet validated.** The skill installs, writes the
 artifact, and opens it. Whether the artifact actually reads *better* than the
 terminal answer has not been tested on real dense answers yet — that is the
