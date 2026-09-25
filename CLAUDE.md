@@ -43,6 +43,7 @@ python build.py --check        # base.html still matches its sources
 python check-contrast.py       # every theme passes WCAG AA, both modes
 python build.py --theme cellar-gold   # rebuild with a different palette
 cd ../.. && python examples/render.py   # regenerate the example artifacts
+python examples/demo.py                  # regenerate the README demo (screenshot needs Edge/Chrome)
 ```
 
 `examples/` holds one real answer rendered in every theme, plus a contact
